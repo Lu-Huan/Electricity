@@ -1,0 +1,161 @@
+[33mcommit 29831ce6b169a7f8895706a8da00d4f007fc76b0[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:51:06 2018 +0800
+
+    Revert "Revert "20""
+    
+    This reverts commit d9ba80bd49c05e5c9f7529bc9097dce61af27f82.
+
+[33mcommit 7fb33e708f2b385144ddf0b257ec5afcee7cae0e[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:48:52 2018 +0800
+
+    Revert "19"
+    
+    This reverts commit cfd92e831e75f3f2c022425178d30fb185597e14.
+
+[33mcommit d9ba80bd49c05e5c9f7529bc9097dce61af27f82[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:48:41 2018 +0800
+
+    Revert "20"
+    
+    This reverts commit 881a34bd479df255a7cc30d13eb5ca57d443cddc.
+
+[33mcommit 881a34bd479df255a7cc30d13eb5ca57d443cddc[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:41:00 2018 +0800
+
+    20
+
+[33mcommit cfd92e831e75f3f2c022425178d30fb185597e14[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:40:37 2018 +0800
+
+    19
+
+[33mcommit 58b245f333e9177da2bd4fb7c47fca0b4f3c7c1b[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:39:29 2018 +0800
+
+    18
+
+[33mcommit a7a088ac470cd150b1c59255b9904f8c885d33e1[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:39:13 2018 +0800
+
+    17
+
+[33mcommit 36aaa36c0a207ee1c1eb48131d39f1b4bd625756[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:35:19 2018 +0800
+
+    15
+
+[33mcommit 62fa278e871729b91d013fceb7f5cfbeaf224c5a[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:34:37 2018 +0800
+
+    14
+
+[33mcommit 8dddc5711a3739a4200e99dfe9c2471c41827505[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:34:05 2018 +0800
+
+    13
+
+[33mcommit 2e9234434db703b3c9a09ef86829acfe79c8d74d[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:33:24 2018 +0800
+
+    12
+
+[33mcommit 0a1a2c4464f86cd43463e98fcc7ca24a1235c5a1[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:33:04 2018 +0800
+
+    11
+
+[33mcommit 4ae44a4117e03341239f514f699c583f4427c0ed[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:32:28 2018 +0800
+
+    9
+
+[33mcommit 4fc6ab9a7b717067478dac94a95e28f137f737e9[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:32:10 2018 +0800
+
+    9
+
+[33mcommit 6026d1d7dc510fc8b70c68f39365332717670a31[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:31:58 2018 +0800
+
+    8
+
+[33mcommit 7d162ab48a5e2d386ce32b8474596cc9a177a713[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:31:42 2018 +0800
+
+    7
+
+[33mcommit 057c14b2b58449c80c1d81b0677ead609a49ea83[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:31:25 2018 +0800
+
+    5
+
+[33mcommit 77ef0e973b323c2d221c1a837a8b4eb535ff1b11[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:31:03 2018 +0800
+
+    6
+
+[33mcommit 99b78689bf3845940b7bb205a313800dd7a95ea5[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:30:45 2018 +0800
+
+    5
+
+[33mcommit 0520a82d3a61c2e65e40578ea3c8a0f87a117c51[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:30:21 2018 +0800
+
+    4
+
+[33mcommit 5501ff8bed584a3e4bc39bff96f5805568255812[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:30:02 2018 +0800
+
+    3
+
+[33mcommit 6cd3e40c3620898b432a90122d02225836f52bcb[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:29:32 2018 +0800
+
+    2
+
+[33mcommit 391a8e81729cf938a90458bcfd7b352fdb136b2f[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 22:29:13 2018 +0800
+
+    1
+
+[33mcommit 80abb9747600fb0a3bfc4424711cea5b6a5c6d71[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 18:55:55 2018 +0800
+
+    2
+
+[33mcommit efcbc7fed93ce8eaeb10c498e63ca21e50b067fd[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 18:44:52 2018 +0800
+
+    3
+
+[33mcommit 3820b36b338df224bd17bdb0d17d3b0dff6c3f35[m
+Author: Lu-Huan <180356757@qq.com>
+Date:   Thu Nov 8 18:00:58 2018 +0800
+
+    2
