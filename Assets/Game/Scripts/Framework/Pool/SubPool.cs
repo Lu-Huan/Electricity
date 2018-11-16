@@ -56,7 +56,6 @@ public class SubPool
     {
         if(Contains(go))
         {
-            Debug.Log("对象被回收:" + go.name);
             go.SendMessage("OnUnspawn", SendMessageOptions.DontRequireReceiver);
             go.SetActive(false);
         }

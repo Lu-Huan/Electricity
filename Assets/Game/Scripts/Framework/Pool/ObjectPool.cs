@@ -31,7 +31,6 @@ public class ObjectPool : Singleton<ObjectPool>
                 break;
             }
         }
-        Debug.Log("对象池为:" + pool.Name);
         pool.Unspawn(go);
     }
 
