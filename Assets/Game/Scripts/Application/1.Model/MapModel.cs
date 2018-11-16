@@ -98,9 +98,7 @@ public class MapModel : Model
     {
         //计算索引
         //根据格子索引号获得格子
-        Debug.Log(tileX + "," + tileY+","+MapHeight);
         int index = tileX * MapHeight + tileY;
-        Debug.Log(index);
         if (index < 0 || index >= MapTiles.Count)
             throw new IndexOutOfRangeException("格子索引越界");
         return MapTiles[index];
@@ -514,7 +512,6 @@ public class MapModel : Model
         for (int i = 0; i < MapPath.Count - 1; i++)
         {
             Thread.Sleep(80);
-            Debug.Log(Arrow.name);
             GameObject arrow = Game.Instance.ObjectPool.Spawn(Arrow.name);
             arrow.transform.position = MapPath[i] + new Vector3(0, 0.07f, 0);
 

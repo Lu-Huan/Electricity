@@ -1,23 +1,41 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class MainCharacter : View
 {
-    public float Speed=2;
-    //private Animation Animation;
+    public float Speed = 2;
     private bool IsWalk = true;
     private bool IsShop = false;
-    private bool IsJump=false;
+    private bool IsJump = false;
     MapModel mapModel;
     Actions Actions;
     PlayerController PlayerController;
-    int index=0;
+    public Monster targe = null;
+    public GameObject SelectedEffect;//选中怪物后的效果显示
+    [SerializeField] private float ShootRate = 4;
+    private float Timer = 0;
+    [SerializeField] private string GunName = "empty";
+    [SerializeField] private int GunID = 0;
+    [SerializeField] private float Distance = 1;
+    private bool Shoot = false;
+    private bool Close = false;
+    private bool Colder = false;
+    int index = 0;
+    private Transform bullteRight=null;
+    private Transform bullteLeft = null;
+    private bool IsRight=true;
+    private Transform YM27;
     int Playerindex
     {
         set
         {
-            index = value% PlayerController.arsenal.Length;
+            index = value % PlayerController.arsenal.Length;
+            GunInfo gunInfo = Game.Instance.StaticData.GetGunInfo(index);
+            GunName = gunInfo.PrefabName;
+            GunID = gunInfo.ID;
+            ShootRate = gunInfo.ShootRate;
+            Distance = gunInfo.ShootingDistance;
+
         }
         get
         {
@@ -46,7 +64,7 @@ public class MainCharacter : View
             Actions.Stay();
             IsShop = false;
         }
-        else if(eventName==Consts.E_ExitShop)
+        else if (eventName == Consts.E_ExitShop)
         {
             Actions.Stay();
             IsShop = false;
@@ -63,11 +81,39 @@ public class MainCharacter : View
         Actions.Stay();
         mapModel = GetModel<MapModel>();
         Playerindex = 0;
+        PlayerController.GunYM3Right += GunYM3right;
+        PlayerController.GunYM3Left += GunYM3Left;
+        PlayerController.GunYM27 += GunYM27;
+        // SelectedEffect = GameObject.Find("SelectedEffect");
+    }
+
+    private void GunYM3Left(Transform obj)
+    {
+        bullteLeft = obj;
+    }
+
+    private void GunYM27(Transform obj)
+    {
+        YM27 = obj;
+    }
+
+    private void GunYM3right(Transform obj)
+    {
+        bullteRight = obj;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //冷却计时器
+        Timer += Time.deltaTime;
+        if (Timer >= 1f / ShootRate)
+        {
+            Colder = false;
+            Timer = 0;
+        }
+
+        TargeEffectShow();
         if (Input.GetKeyDown(KeyCode.B))
         {
             if (IsShop)
@@ -86,15 +132,8 @@ public class MainCharacter : View
                 }
             }
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            Playerindex++;
-            PlayerController.SetArsenal(PlayerController.arsenal[Playerindex].name);
-            
-        }
         if (IsShop)
         {
-
             return;
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -107,46 +146,185 @@ public class MainCharacter : View
         {
             Actions.Sitting();
         }
-        if (Input.GetMouseButton(0))
+        else if (Input.GetAxis("Mouse ScrollWheel") != 0)
         {
-            Actions.Attack();
+            Playerindex++;
+            PlayerController.SetArsenal(PlayerController.arsenal[Playerindex].name);
         }
+        else if (Input.GetMouseButton(0))//左键射击
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("Monster")))
+            {
+                targe=hit.collider.gameObject.GetComponent<Monster>();
+            }
+            if (!Shoot)
+            {
+                GetTarge();
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            Actions.Aiming();
+        }
+
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         if (!IsJump)
         {
-            if (Mathf.Abs(x) + Mathf.Abs(z) < 0.1f)
+            if (Mathf.Abs(x) + Mathf.Abs(z) < 0.02f)
             {
                 if (IsWalk)
                 {
-                    //Animation.Play("idle");
                     Actions.Stay();
                     IsWalk = false;
+
                 }
-                return;
             }
             else if (Input.GetKey(KeyCode.LeftShift))
             {
                 Actions.Run();
                 Speed = 3f;
                 IsWalk = true;
+                Shoot = false;
             }
             else
             {
                 Actions.Walk();
                 IsWalk = true;
+                Shoot = false;
             }
         }
         Vector3 dir = new Vector3(x, 0, z);
-        Vector3 Start = new Vector3(0, 0, 1);
-        transform.position += dir * Time.deltaTime * Speed;
 
+        if (IsWalk)
+        {
+            transform.position += dir * Time.deltaTime * Speed;
+            if (Playerindex==3)
+            {
+                YM27.GetComponent<XLine>().Close();
+            }
+        }
+        else if (Shoot)
+        {
+            if (targe != null)
+            {
+                dir = targe.Position - transform.position;
+                dir.y = 0;
+                float dis = Mathf.Sqrt(dir.x * dir.x + dir.z * dir.z);
+                if (dis > Distance)
+                {
+                    Close = true;
+                }
+                if (Close)
+                {
+                    dir = Vector3.Normalize(dir) * 1.4f;
+                    transform.position += dir * Time.deltaTime * Speed;
+                    Actions.Walk();
+                    float s = Distance * 2f / 3f;
+                    if (Playerindex == 0)
+                    {
+                        s = 0.1f;
+                    }
+                    if (dis <= s)
+                    {
+                        Close = false;
+                    }
+                }
+                else
+                {
+                    if (!Colder)
+                    {
+                        Actions.Attack();
+                        Colder = true;
+                        Timer = 0;
+                        InstanceBullte();
+                    }
+                }
+            }
+        }
+        Vector3 Start = new Vector3(0, 0, 1);
         float angle = Vector3.Angle(Start, dir); //求出两向量之间的夹角
         Vector3 normal = Vector3.Cross(Start, dir);//叉乘求出法线向量  
         angle *= Mathf.Sign(Vector3.Dot(normal, new Vector3(0, 1, 0)));  //求法线向量与物体上方向向量点乘，结果为1或-1，修正旋转方向 
-        //float current= Mathf.Lerp(transform.localRotation.y, angle, 0.5f);
+                                                                         
         transform.localRotation = Quaternion.Euler(new Vector3(0, angle, 0));
+
     }
+    /// <summary>
+    /// 实列化子弹
+    /// </summary>
+    private void InstanceBullte()
+    {
+        if (Playerindex==1)
+        {
+            GameObject bu= Game.Instance.ObjectPool.Spawn("Ym3Bullte");
+            bu.transform.position = bullteRight.position;
+            bu.GetComponent<YM3Bullte>().Load(2, 1,targe); 
+        }
+        else if (Playerindex == 2)
+        {
+            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullte");
+            if (IsRight)
+            {
+                bu.transform.position = bullteRight.position;
+            }
+            else
+            {
+                bu.transform.position = bullteLeft.position;
+            }
+            bu.GetComponent<YM3Bullte>().Load(2, 1, targe);
+            IsRight = !IsRight;
+        }
+        else if (Playerindex == 3)
+        {
+            Vector3 offet = targe.Position + new Vector3(0, 0.2f, 0) - YM27.position;
+            float angle = Vector3.Angle(offet, Vector3.up);
+            YM27.localEulerAngles = new Vector3(angle, 0, 0);
+            YM27.GetComponent<XLine>().CanShoot();
+        }
+    }
+    /// <summary>
+    /// 显示选中怪物的效果
+    /// </summary>
+    private void TargeEffectShow()
+    {
+        if (targe != null)
+        {
+            SelectedEffect.transform.position = targe.Position+new Vector3(0,0.1f,0);
+        }
+        else
+        {
+            SelectedEffect.transform.position = new Vector3(0, -5, 0);
+        }
+    }
+    /// <summary>
+    /// 得到一个目标
+    /// </summary>
+    private void GetTarge()
+    {
+        Spawner spawner = GetModel<Spawner>();
+        if (spawner.monsters.Count > 0)
+        {
+            targe = spawner.monsters[0];
+            Shoot = true;
+            targe.Dead += Targe_Dead;
+        }
+        else
+        {
+            targe = null;
+            Actions.Attack();
+            Actions.Stay();
+        }
+    }
+
+    private void Targe_Dead(Role obj)
+    {
+        GetTarge();
+    }
+
     private void JumpBack()
     {
         IsJump = false;

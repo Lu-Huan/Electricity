@@ -90,7 +90,6 @@ public class RoundModel : Model
         for (int k = 0; k < round.Count; k++)
         {
             MonsterGroup group = round[k];
-            Debug.Log("显示怪物群：ID" + group.monsterID + "数量:" + group.count);
 
             SendEvent(Consts.E_SpawnMonsterGroups, group);//发送一个显示怪物群的消息
             for (int j = 0; j < group.count; j++)

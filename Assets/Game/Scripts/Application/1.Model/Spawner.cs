@@ -6,7 +6,9 @@ using UnityEngine;
 public class Spawner : Model
 {
     public MapModel mapM;
-    List<Monster> monsters=new List<Monster>();
+    public List<Monster> monsters=new List<Monster>();
+    
+
     public override string Name
     {
         get
@@ -62,17 +64,6 @@ public class Spawner : Model
             Debug.Log("运行下一个关卡");
             SendEvent(Consts.E_NextRound);
         }
-        //胜利条件判断
-        /* RoundModel rm = GetModel<RoundModel>();
-         GameModel gm = GetModel<GameModel>();
-         GameObject[] monsters = GameObject.FindGameObjectsWithTag("Monster");
-         if (monsters.Length == 0        //场景里没有怪物了
-             && !electricity.IsDead          //还活着
-             && rm.AllRoundsComplete)    //所有怪物都已出完
-         {
-             //游戏胜利
-             SendEvent(Consts.E_EndLevel, new EndLevelArgs() { LevelID = gm.PlayLevelIndex, IsSuccess = true });
-         }*/
     }
 
     public void SpawnTower(int TowerID, Vector3 pos)
