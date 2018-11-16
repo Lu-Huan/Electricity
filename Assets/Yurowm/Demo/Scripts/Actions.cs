@@ -9,29 +9,35 @@ public class Actions : MonoBehaviour {
 	const int countOfDamageAnimations = 3;
 	int lastDamageAnimation = -1;
 
+    private bool Shoot=false;
 	void Awake () {
 		animator = GetComponent<Animator> ();
 	}
 
 	public void Stay () {
-		animator.SetBool("Aiming", false);
-		animator.SetFloat ("Speed", 0f);
-		}
+        Shoot = false;
+        animator.SetFloat ("Speed", 0f);
+	}
 
 	public void Walk () {
-		animator.SetBool("Aiming", false);
-		animator.SetFloat ("Speed", 0.5f);
+        Shoot = false;
+        animator.SetFloat ("Speed", 0.5f);
 	}
 
 	public void Run () {
-		animator.SetBool("Aiming", false);
-		animator.SetFloat ("Speed", 1f);
+        Shoot = false;
+        animator.SetFloat ("Speed", 1f);
 	}
 
 	public void Attack () {
-		Aiming ();
-		animator.SetTrigger ("Attack");
-	}
+        animator.SetTrigger("Attack");
+        if (!Shoot)
+        {
+            Aiming();  
+            Shoot = !Shoot;
+            
+        }  
+    }
 
 	public void Death () {
 		if (animator.GetCurrentAnimatorStateInfo (0).IsName ("Death"))
@@ -54,18 +60,16 @@ public class Actions : MonoBehaviour {
 	public void Jump () {
 		animator.SetBool ("Squat", false);
 		animator.SetFloat ("Speed", 0f);
-		animator.SetBool("Aiming", false);
 		animator.SetTrigger ("Jump");
 	}
 
 	public void Aiming () {
 		animator.SetBool ("Squat", false);
 		animator.SetFloat ("Speed", 0f);
-		animator.SetBool("Aiming", true);
+		animator.SetTrigger("Aiming");
 	}
 
 	public void Sitting () {
 		animator.SetBool ("Squat", !animator.GetBool("Squat"));
-		animator.SetBool("Aiming", false);
 	}
 }
