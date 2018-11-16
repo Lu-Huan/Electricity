@@ -13,7 +13,6 @@ public class Electricity : Role
     #endregion
 
     #region 字段
-    Animator m_Animator = null;
     #endregion
 
     #region 属性

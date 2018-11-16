@@ -49,11 +49,6 @@ public abstract class Tower : Role
             m_Target = monsters[0];
         }
     }
-    /*protected virtual void Awake()
-    {
-        //m_Animator = GetComponent<Animator>();
-    }*/
-
     void Update()
     {
         //朝向目标
@@ -67,7 +62,6 @@ public abstract class Tower : Role
         //发射判断
         if (Time.time >= m_LastShotTime + 1f / ShotRate)
         {
-            Debug.Log("发射子弹");
             //创建子弹
             Shot(m_Target);
 

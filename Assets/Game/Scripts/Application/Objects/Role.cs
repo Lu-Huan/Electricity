@@ -39,7 +39,6 @@ public abstract class Role : ReusbleObject, IReusable
             //血量变化
             if (HpChanged != null)
             HpChanged(m_Hp, m_MaxHp);
-            Debug.Log("血量变化:" + m_Hp + "/" + m_MaxHp);
             //死亡事件
             if (m_Hp == 0)
             {

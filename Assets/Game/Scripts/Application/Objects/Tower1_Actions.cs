@@ -54,7 +54,7 @@ public class Tower1_Actions : Tower
     {
         if (bool_fire)
         {
-            animator.SetBool("Fire", false);
+            animator.SetTrigger("Idle");
             bool_fire = false;
         }
     }
@@ -63,10 +63,8 @@ public class Tower1_Actions : Tower
         if (!bool_fire)
         {
             bool_fire = true;
-            animator.SetBool("Fire", true);
-            animator.SetTrigger("Trigger");
+            animator.SetTrigger("Fire");
         }
-
     }
     public override void Shot(Monster monster)
     {

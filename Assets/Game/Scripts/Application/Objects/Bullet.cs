@@ -4,24 +4,20 @@ using System.Collections;
 public abstract class Bullet : ReusbleObject, IReusable
 {
     //类型
-    public int ID { get; private set; }
+    public int ID { get;  set; }
     //等级
     public int Level { get; set; }
     //基本速度
-    public float BaseSpeed { get; private set; }
+    public float BaseSpeed { get;  set; }
     //基本攻击力
-    public int BaseAttack { get; private set; }
+    public int BaseAttack { get;  set; }
 
     //移动速度
     public float Speed { get { return BaseSpeed * Level; } }
     //攻击力
-    public int Attack { get { return BaseAttack * Level; } }
-
-    //地图范围
-    public Rect MapRect { get; private set; }
-
+    public int Demage { get { return BaseAttack * Level; } }
     //延迟回收时间(秒)
-    public float DelayToDestory = 1f;
+    public float DelayToDestory = 0.3f;
 
     //是否爆炸
     protected bool m_IsExploded = false;
@@ -40,28 +36,16 @@ public abstract class Bullet : ReusbleObject, IReusable
 
     }
 
-    public void Load(int bulletID, int level, Rect mapRect)
+    public virtual void Load(int bulletID, int level, Monster monster)
     {
-        MapRect = mapRect;
 
-        this.ID = bulletID;
-        this.Level = level;
-
-        BulletInfo info = Game.Instance.StaticData.GetBulletInfo(bulletID);
-        this.BaseSpeed = info.BaseSpeed;
-        this.BaseAttack = info.BaseAttack;
     }
 
-    public void Explode()
+    public virtual void Explode()
     {
         //标记已爆炸
         m_IsExploded = true;
-
-        //播放爆炸动画
-        m_Animator.SetTrigger("IsExplode");
-
-        //延迟回收
-        StartCoroutine("DestoryCoroutine");
+        StartCoroutine(DestoryCoroutine());
     }
 
     IEnumerator DestoryCoroutine()
@@ -70,7 +54,7 @@ public abstract class Bullet : ReusbleObject, IReusable
         yield return new WaitForSeconds(DelayToDestory);
 
         //回收
-        Game.Instance.ObjectPool.Unspawn(this.gameObject);
+        Game.Instance.ObjectPool.Unspawn(gameObject);
     }
 
     public override void OnSpawn()
@@ -81,7 +65,5 @@ public abstract class Bullet : ReusbleObject, IReusable
     public override void OnUnspawn()
     {
         m_IsExploded = false;
-        m_Animator.Play("Play");
-        m_Animator.ResetTrigger("IsExplode");
     }
 }
