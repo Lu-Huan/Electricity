@@ -748,9 +748,10 @@ GameObject:
   - component: {fileID: 9500000}
   - component: {fileID: 11400000}
   - component: {fileID: 11400002}
+  - component: {fileID: 114733302891906568}
   m_Layer: 0
   m_Name: CyborgGirl
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1447,8 +1448,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100098}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 4.44, y: 0, z: 2.44}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_Children:
   - {fileID: 400000}
   - {fileID: 400096}
@@ -1665,3 +1666,22 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100098}
   m_IsPrefabAsset: 1
+--- !u!114 &114733302891906568
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66718eb5bc50fb42a963bebfb6141bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AttentionEvents: []
+  Speed: 2
+  targe: {fileID: 0}
+  SelectedEffect: {fileID: 0}
+  ShootRate: 0
+  GunName: 
+  GunID: 0
+  Distance: 1.5

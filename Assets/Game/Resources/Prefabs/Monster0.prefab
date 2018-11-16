@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33633732727845416}
   - component: {fileID: 23654722802838402}
   - component: {fileID: 95317293637602026}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: botBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4296539525321194}
   - component: {fileID: 33924321633885568}
   - component: {fileID: 23065892312727830}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: guns
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 4126566260578504}
   - component: {fileID: 33135804756954226}
   - component: {fileID: 23053902317650816}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: axle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4435395708517888}
   - component: {fileID: 33189378453675402}
   - component: {fileID: 23522658637875138}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: leftWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 114951715216254908}
   - component: {fileID: 114810320624309100}
   - component: {fileID: 65013963576466062}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Monster0
   m_TagString: Monster
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4905688991736352}
   - component: {fileID: 33338831048554316}
   - component: {fileID: 23250401777361964}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: rightWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1928244954057134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.423008, y: 0.21, z: 3.3414724}
+  m_LocalPosition: {x: 7.21, y: 0.21, z: 6.005}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children:
   - {fileID: 4126566260578504}
@@ -418,8 +418,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.054011058, y: 0.0735546, z: 0.1}
-  m_Center: {x: 0.006920004, y: 0.013222701, z: 0}
+  m_Size: {x: 0.054011058, y: 0.086660616, z: 0.1}
+  m_Center: {x: 0.006920004, y: 0.006669706, z: 0}
 --- !u!95 &95317293637602026
 Animator:
   serializedVersion: 3
