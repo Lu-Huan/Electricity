@@ -16,7 +16,7 @@ public static class Consts
     public const int MapHeight = 10;//地图高
     //参数
     public const string GameProgress = "GameProgress";
-    public const float DotClosedDistance = 0.1f;
+    public const float DotClosedDistance = 0.55f;//在这个距离内就作为子弹命中
     public const float RangeClosedDistance = 0.7f;
 
     //Model

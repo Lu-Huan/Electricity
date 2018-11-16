@@ -31,7 +31,6 @@ public class MapV : View
         MapModel mapModel = GetModel<MapModel>();
         mapModel.TileHeight = TileHeight;
         mapModel.TileWidth = TileWidth;
-        Debug.Log("传过去");
         mapModel.End = End;
         mapModel.path = path;
         //箭头预制件

@@ -51,6 +51,7 @@ public class UI_Game2 : View
     public Text[] towerText;
     private Animator NoMoney;
     private Text RoundX;
+    public GameObject Win;
     public override string Name
     {
         get
@@ -70,6 +71,7 @@ public class UI_Game2 : View
         AttentionEvents.Add(Consts.E_CompleteSpawnMonster);
         AttentionEvents.Add(Consts.E_CompleteSpawnTower);
         AttentionEvents.Add(Consts.E_CompleteInitMap);
+        AttentionEvents.Add(Consts.E_AllRoundsComplete);
     }
     // Use this for initialization
     void Start()
@@ -89,7 +91,7 @@ public class UI_Game2 : View
 
         RoundX = transform.Find("Roundx").GetComponent<Text>();
 
-        
+
     }
     /*private void UI_RoundEvent_ShowComplete()//地图生成后展示关卡和回合信息
     {
@@ -141,6 +143,9 @@ public class UI_Game2 : View
             case Consts.E_CompleteInitMap:
                 E_CompleteInitMap();
                 break;
+            case Consts.E_AllRoundsComplete:
+                Win.SetActive(true);
+                break;
         }
     }
     private void E_Damage()
@@ -155,20 +160,19 @@ public class UI_Game2 : View
         MapModel mapModel = GetModel<MapModel>();
         End = mapModel.end.transform;
         StartRoundArgs startRoundArgs = data as StartRoundArgs;
-        int index=startRoundArgs.RoundIndex+1;
+        int index = startRoundArgs.RoundIndex + 1;
         int MT = startRoundArgs.MonsterTotal;
         int TE = TotalEnemy;
 
         RoundX.GetComponent<Animator>().SetTrigger("Roundx");
-        RoundX.text = "Round "+ index;
+        RoundX.text = "Round " + index;
         RoundMessage.text = "回合:" + index + "/" + startRoundArgs.RoundTotal;
         CurrentRound.text = "剩余敌人:     /" + MT;
         TotalEnemy = MT;
-        Enemy.text = "                " + TE;
+        Enemy.text = "                " + TotalEnemy;
     }
     private void E_MonsterDead(object data)
     {
-        Debug.Log("敌人有" + TotalEnemy);
         TotalEnemy--;
         Enemy.text = "                " + TotalEnemy;
         Monster monster = data as Monster;
@@ -215,14 +219,20 @@ public class UI_Game2 : View
                 TowerID = ID,
                 Position = gameModel.MainCharater.transform.position
             };
-            Debug.Log("买得起");
             SendEvent(Consts.E_SpawnTower, args);
             Money -= towerPrice[ID];
         }
         else
         {
-            Debug.Log("买不起");
             NoMoney.SetTrigger("Show");
         }
     }
+
+    //异步加载新场景
+
+    public void LoadNewScene()
+    {
+        Game.Instance.LoadScene(4);
+    }
+
 }
