@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class StaticData : Singleton<StaticData>
 {
-    //Dictionary<int, LuoboInfo> m_Luobos = new Dictionary<int, LuoboInfo>();
     Dictionary<int, MonsterInfo> m_Monsters = new Dictionary<int, MonsterInfo>();
     Dictionary<int, TowerInfo> m_Towers = new Dictionary<int, TowerInfo>();
     Dictionary<int, BulletInfo> m_Bullets = new Dictionary<int, BulletInfo>();
@@ -17,11 +16,6 @@ public class StaticData : Singleton<StaticData>
         InitBullets();
         InitGuns();
     }
-
-    /*void InitLuobos()
-    {
-        m_Luobos.Add(0, new LuoboInfo() { ID = 0, Hp = 2 });
-    }*/
 
     void InitMonsters()
     {
@@ -52,12 +46,6 @@ public class StaticData : Singleton<StaticData>
         m_Guns.Add(2, new GunInfo() { ID = 2, PrefabName = "SciFiPistol_YM-3S", ShootRate = 3, ShootingDistance = 5f });
         m_Guns.Add(3, new GunInfo() { ID = 3, PrefabName = "SciFiRifle_YM-27", ShootRate = 10, ShootingDistance = 7f });
     }
-
-    /* public LuoboInfo GetLuoboInfo()
-     {
-         return m_Luobos[0];
-     }*/
-
     public MonsterInfo GetMonsterInfo(int monsterID)
     {
         return m_Monsters[monsterID];

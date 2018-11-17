@@ -136,41 +136,14 @@ public class MainCharacter : View
         {
             return;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Actions.Jump();
-            Invoke("JumpBack", 1f);
-            IsJump = true;
-        }
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            Actions.Sitting();
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") != 0)
-        {
-            Playerindex++;
-            PlayerController.SetArsenal(PlayerController.arsenal[Playerindex].name);
-        }
-        else if (Input.GetMouseButton(0))//左键射击
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction, Color.red);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("Monster")))
-            {
-                targe=hit.collider.gameObject.GetComponent<Monster>();
-                targe.Dead += Targe_Dead;
-            }
-            if (!Shoot)
-            {
-                GetTarge();
-            }
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            Actions.Aiming();
-        }
+        GetSomeKey();
 
+        Vector3 dir = ShootOrWalk();
+        AdjustmentDirection(dir);
+    }
+
+    private Vector3 ShootOrWalk()
+    {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
         if (!IsJump)
@@ -203,7 +176,7 @@ public class MainCharacter : View
         if (IsWalk)
         {
             transform.position += dir * Time.deltaTime * Speed;
-            if (Playerindex==3)
+            if (Playerindex == 3)
             {
                 YM27.GetComponent<XLine>().Close();
             }
@@ -246,14 +219,57 @@ public class MainCharacter : View
                 }
             }
         }
+
+        return dir;
+    }
+
+    private void GetSomeKey()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Actions.Jump();
+            Invoke("JumpBack", 1f);
+            IsJump = true;
+        }
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            Actions.Sitting();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") != 0)
+        {
+            Playerindex++;
+            PlayerController.SetArsenal(PlayerController.arsenal[Playerindex].name);
+        }
+        else if (Input.GetMouseButton(0))//左键射击
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(ray.origin, ray.direction, Color.red);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("Monster")))
+            {
+                targe = hit.collider.gameObject.GetComponent<Monster>();
+                targe.Dead += Targe_Dead;
+            }
+            if (!Shoot)
+            {
+                GetTarge();
+            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            Actions.Aiming();
+        }
+    }
+
+    private void AdjustmentDirection(Vector3 dir)
+    {
         Vector3 Start = new Vector3(0, 0, 1);
         float angle = Vector3.Angle(Start, dir); //求出两向量之间的夹角
         Vector3 normal = Vector3.Cross(Start, dir);//叉乘求出法线向量  
         angle *= Mathf.Sign(Vector3.Dot(normal, new Vector3(0, 1, 0)));  //求法线向量与物体上方向向量点乘，结果为1或-1，修正旋转方向 
-                                                                         
         transform.localRotation = Quaternion.Euler(new Vector3(0, angle, 0));
-
     }
+
     /// <summary>
     /// 实列化子弹
     /// </summary>

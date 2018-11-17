@@ -196,10 +196,6 @@ public class UI_Game2 : View
         }
         Round_An.SetTrigger("StartRound");
     }
-    /*private void E_NextRound()
-    {
-
-    }*/
     private void E_CompleteInitMap()
     {
         Debug.Log("显示关卡信息");

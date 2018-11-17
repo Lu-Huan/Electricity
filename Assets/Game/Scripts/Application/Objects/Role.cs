@@ -88,8 +88,6 @@ public abstract class Role : ReusbleObject, IReusable
     }
     #endregion
 
-    #region Unity回调
-    #endregion
 
     #region 事件回调
     public override void OnSpawn()
@@ -107,6 +105,5 @@ public abstract class Role : ReusbleObject, IReusable
     }
     #endregion
 
-    #region 帮助方法
-    #endregion
+
 }
