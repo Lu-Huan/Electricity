@@ -159,6 +159,7 @@ public class MainCharacter : View
             if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("Monster")))
             {
                 targe=hit.collider.gameObject.GetComponent<Monster>();
+                targe.Dead += Targe_Dead;
             }
             if (!Shoot)
             {
