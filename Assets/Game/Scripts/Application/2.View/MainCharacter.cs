@@ -21,9 +21,9 @@ public class MainCharacter : View
     private bool Close = false;
     private bool Colder = false;
     int index = 0;
-    private Transform bullteRight=null;
+    private Transform bullteRight = null;
     private Transform bullteLeft = null;
-    private bool IsRight=true;
+    private bool IsRight = true;
     private Transform YM27;
     int Playerindex
     {
@@ -43,7 +43,7 @@ public class MainCharacter : View
         }
     }
 
-
+    #region MVC
     public override string Name
     {
         get
@@ -70,7 +70,24 @@ public class MainCharacter : View
             IsShop = false;
         }
     }
+    #endregion
 
+    #region 对PlayerController的委托
+    private void GunYM3Left(Transform obj)
+    {
+        bullteLeft = obj;
+    }
+
+    private void GunYM27(Transform obj)
+    {
+        YM27 = obj;
+    }
+
+    private void GunYM3right(Transform obj)
+    {
+        bullteRight = obj;
+    }
+    #endregion
     // Use this for initialization
     void Start()
     {
@@ -87,20 +104,6 @@ public class MainCharacter : View
         // SelectedEffect = GameObject.Find("SelectedEffect");
     }
 
-    private void GunYM3Left(Transform obj)
-    {
-        bullteLeft = obj;
-    }
-
-    private void GunYM27(Transform obj)
-    {
-        YM27 = obj;
-    }
-
-    private void GunYM3right(Transform obj)
-    {
-        bullteRight = obj;
-    }
 
     // Update is called once per frame
     void Update()
@@ -222,7 +225,9 @@ public class MainCharacter : View
 
         return dir;
     }
-
+    /// <summary>
+    /// 获取按键
+    /// </summary>
     private void GetSomeKey()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -261,6 +266,10 @@ public class MainCharacter : View
         }
     }
 
+    /// <summary>
+    /// 调整方向
+    /// </summary>
+    /// <param name="dir"></param>
     private void AdjustmentDirection(Vector3 dir)
     {
         Vector3 Start = new Vector3(0, 0, 1);
@@ -275,11 +284,11 @@ public class MainCharacter : View
     /// </summary>
     private void InstanceBullte()
     {
-        if (Playerindex==1)
+        if (Playerindex == 1)
         {
-            GameObject bu= Game.Instance.ObjectPool.Spawn("Ym3Bullte");
+            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullte");
             bu.transform.position = bullteRight.position;
-            bu.GetComponent<YM3Bullte>().Load(2, 1,targe); 
+            bu.GetComponent<YM3Bullte>().Load(2, 1, targe);
         }
         else if (Playerindex == 2)
         {
@@ -310,7 +319,7 @@ public class MainCharacter : View
     {
         if (targe != null)
         {
-            SelectedEffect.transform.position = targe.Position+new Vector3(0,0.1f,0);
+            SelectedEffect.transform.position = targe.Position + new Vector3(0, 0.1f, 0);
         }
         else
         {
@@ -346,4 +355,6 @@ public class MainCharacter : View
     {
         IsJump = false;
     }
+
+
 }

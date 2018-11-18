@@ -46,9 +46,10 @@ public class YM3Bullte : Bullet
             //爆炸
             Explode();
 
-            GameObject po = Instantiate(Point);
-            po.transform.position = transform.position;
+            /*GameObject po = Instantiate(Point);
+            po.transform.position = transform.position;*/
+            /*Point.transform.position = transform.position;*/
+            Point.SetActive(true);
         }
-
     }
 }

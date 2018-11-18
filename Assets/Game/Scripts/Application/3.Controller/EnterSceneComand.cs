@@ -10,7 +10,7 @@ class EnterSceneComand : Controller
     public override void Execute(object data)
     {
         SceneArgs e = data as SceneArgs;
-
+        Debug.Log("进入场景" + e.SceneIndex);
         //注册视图（View）
         switch (e.SceneIndex)
         {
@@ -19,7 +19,7 @@ class EnterSceneComand : Controller
                 break;
             case 1://Start
                 break;
-            case 2://Select
+            case 2:
                 break;
             case 3://Level
                 GameObject Character = GameObject.Find("Character");

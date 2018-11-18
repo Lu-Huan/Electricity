@@ -17,7 +17,7 @@ public abstract class Bullet : ReusbleObject, IReusable
     //攻击力
     public int Demage { get { return BaseAttack * Level; } }
     //延迟回收时间(秒)
-    public float DelayToDestory = 0.3f;
+    public float DelayToDestory = 0.15f;
 
     //是否爆炸
     protected bool m_IsExploded = false;
