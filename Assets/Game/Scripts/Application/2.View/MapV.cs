@@ -37,7 +37,7 @@ public class MapV : View
         mapModel.Arrow = Arrow;
         mapModel.Door = Door;
         mapModel.Plane = Plane;
-        mapModel.Mess = Mess;
+        mapModel.Box = Mess;
         mapModel.Player = Player;
     }
     #region Unity回调

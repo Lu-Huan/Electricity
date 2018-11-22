@@ -22,7 +22,8 @@ GameObject:
   - component: {fileID: 33004206703752648}
   - component: {fileID: 23624815436861126}
   - component: {fileID: 64246785098868552}
-  m_Layer: 0
+  - component: {fileID: 114838586429766022}
+  m_Layer: 10
   m_Name: Barrell_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +96,20 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 14
   m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300036, guid: fe8bb5221257840c2805e380fc94544a, type: 3}
+--- !u!114 &114838586429766022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1491471035763152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cc35edd97548104fab97f2a04659d48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Hp: 0
+  m_MaxHp: 0

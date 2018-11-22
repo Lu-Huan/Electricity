@@ -24,7 +24,7 @@ public class XLine : MonoBehaviour
             {
                 if (hit.collider.gameObject.tag == "Monster")
                 {
-                    hit.collider.gameObject.GetComponent<Monster>().Damage(2);
+                    hit.collider.gameObject.GetComponent<Monster>().Damage(null,2);
                     Shoot = false;
                 }
             }

@@ -16,18 +16,17 @@ class EndLevelCommand : Controller
         rModel.StopRound();
 
         //停止游戏
-        gm.EndLevel(e.IsSuccess);
-
-        //胜利
-        /*if (e.IsSuccess)
+        //gm.EndLevel(e.IsSuccess);
+        if (e.IsSuccess)
         {
-            //显示胜利面板
-            GetView<UIWin>().Show();
+            gm.Gold += GetView<UI_Game2>().Money*2+300;
         }
         else
         {
-            //显示失败面板
-            GetView<UILost>().Show();
-        }*/
+            int m=GetView<UI_Game2>().Money -40;
+            m=m < 0 ? 0 : m;
+            gm.Gold+= m;
+        }
+        Debug.Log("这里保存金币");
     }
 }

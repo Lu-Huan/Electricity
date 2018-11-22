@@ -9,7 +9,6 @@ public class MapModel : Model
     public MapModel()
     {
         CreateTile();
-        LoadMap(30, 50);
     }
     #region 常量
     public  int MapWidth = Consts.MapWidth;    //地图宽
@@ -50,7 +49,7 @@ public class MapModel : Model
 
 
     public GameObject Plane;
-    public GameObject[] Mess;
+    public GameObject[] Box;
 
     public Transform Player;
 
@@ -72,7 +71,8 @@ public class MapModel : Model
     {
         RoadLength = legth;
         Complexity = complexity;
-
+        //初始化格子
+        InitTile();
         //清除当前状态
         Clear();
 
@@ -137,12 +137,11 @@ public class MapModel : Model
     {
         //开启3个协程
 
-        Game.Instance.StartCoroutine(SetPlayer());//设置主角
+        //Game.Instance.StartCoroutine(SetPlayer());//设置主角
 
         Game.Instance.StartCoroutine(SetArrow());//设置路径箭头
 
         Game.Instance.StartCoroutine(SetGround());//设置地图杂物   
-
        
     }
     #endregion
@@ -453,6 +452,15 @@ public class MapModel : Model
             }
     }
 
+    private void InitTile()
+    {
+        foreach (Tile item in MapTiles)
+        {
+            item.Data = null;
+            item.IsPath = false;
+        }
+    }
+
 
     /*//暂时不用的方法
     Tile GetTileUnderMouse()
@@ -490,17 +498,26 @@ public class MapModel : Model
                 Thread.Sleep(20);
                 if (index < Complexity / 2)
                 {
-                    if (Mess.Length > 0)
+                    if (Box.Length > 0)
                     {
-                        index %= Mess.Length;
-                        GameObject w = Game.Instance.ObjectPool.Spawn(Mess[index].name);
-                        w.transform.position = item.Position;
+                        index %= Box.Length;
+                        GameObject w = Game.Instance.ObjectPool.Spawn(Box[index].name);
+
+                        Box box = w.GetComponent<Box>();
+                        box.Load(index, item.Position);
+                        box.Dead += Box_Dead;
                         item.Data = w;
                     }
                 }
             }
             yield return null;
         }
+    }
+
+    private void Box_Dead(Role obj)
+    {
+        Tile tile = GetTile(obj.Position);
+        tile.Data = null;
     }
 
     /// <summary>
@@ -528,30 +545,32 @@ public class MapModel : Model
                         {
                             go.transform.localEulerAngles = new Vector3(0, 90, 0);
                         }
-
                     }
                 }
             }
-
-            path.transform.position = MapPath[i] + new Vector3(0, 0.07f, 0);
-            Game.Instance.ObjectPool.Spawn(path.name);
+            GameObject p= Game.Instance.ObjectPool.Spawn(path.name);
+            p.transform.position= MapPath[i] + new Vector3(0, 0.07f, 0);
             Vector3 vector3 = MapPath[i + 1] - MapPath[i];
             if (vector3.x == 0)
             {
                 if (vector3.z == 1)
                 {
-                    arrow.transform.localRotation = Quaternion.Euler(new Vector3(90, -90, 0));
+                    arrow.transform.localEulerAngles = new Vector3(90, -90, 0);
                 }
                 else
                 {
-                    arrow.transform.localRotation = Quaternion.Euler(new Vector3(90, 90, 0));
+                    arrow.transform.localEulerAngles = new Vector3(90, 90, 0);
                 }
             }
             else
             {
                 if (vector3.x == -1)
                 {
-                    arrow.transform.localRotation = Quaternion.Euler(new Vector3(90, 180, 0));
+                    arrow.transform.localEulerAngles = new Vector3(90, 180, 0);
+                }
+                else
+                {
+                    arrow.transform.localEulerAngles = new Vector3(90, 0, 0);
                 }
             }
             yield return null;
@@ -588,6 +607,7 @@ public class MapModel : Model
             end.transform.position = new Vector3(end.transform.position.x, f, end.transform.position.z);
             yield return null;
         }
+        Debug.Log("完成");
         SendEvent(Consts.E_CompleteInitMap);
     }
 

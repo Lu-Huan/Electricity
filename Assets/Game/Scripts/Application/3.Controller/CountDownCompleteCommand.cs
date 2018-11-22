@@ -8,11 +8,12 @@ class CountDownCompleteCommand : Controller
 {
     public override void Execute(object data)
     {
+        Debug.Log("开始出怪");
         //开始出怪
         MapModel mapModel = GetModel<MapModel>();
         
         RoundModel rModel = GetModel<RoundModel>();
-        rModel.End = mapModel.end.GetComponent<Electricity>();
+        rModel.InitEnd(mapModel.end.GetComponent<Electricity>());
         rModel.StartRound();
     }
 }

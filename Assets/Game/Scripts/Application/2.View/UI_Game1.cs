@@ -15,7 +15,8 @@ public class UI_Game1 : View {
 
     public void Start1()
     {
-        Game.Instance.LoadScene(2);
+        SendEvent(Consts.E_CreatMap);
+        Game.Instance.LoadScene(3);
     }
 
     public override void HandleEvent(string eventName, object data)

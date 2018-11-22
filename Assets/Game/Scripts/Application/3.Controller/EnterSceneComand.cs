@@ -12,6 +12,7 @@ class EnterSceneComand : Controller
         SceneArgs e = data as SceneArgs;
         Debug.Log("进入场景" + e.SceneIndex);
         //注册视图（View）
+        MapModel mapModel;
         switch (e.SceneIndex)
         {
             case 0: //Init
@@ -20,18 +21,19 @@ class EnterSceneComand : Controller
             case 1://Start
                 break;
             case 2:
+                RegisterView(GameObject.Find("Character").GetComponent<MainCharacter>());
                 break;
             case 3://Level
                 GameObject Character = GameObject.Find("Character");
                 RegisterView(GameObject.Find("Map").GetComponent<MapV>());
                 RegisterView(GameObject.Find("Canvas").GetComponent<UI_Game2>());
                 RegisterView(Character.GetComponent<MainCharacter>());
+
                 GetModel<GameModel>().MainCharater = Character;
-                MapModel mapModel =GetModel<MapModel>();
+                mapModel =GetModel<MapModel>();
+
                 GetModel<Spawner>().mapM = mapModel;
                 mapModel.Draw();
-                break;
-            case 4:
                 break;
         }
     }

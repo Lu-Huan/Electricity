@@ -16,11 +16,12 @@ class StartUpCommand : Controller
         //注册命令（Controller）
         RegisterController(Consts.E_EnterScene, typeof(EnterSceneComand));//进入场景
         RegisterController(Consts.E_ExitScene, typeof(ExitSceneCommand));//退出场景
-        RegisterController(Consts.E_StartLevel, typeof(StartLevelCommand));//开始关卡
-        RegisterController(Consts.E_NextRound, typeof(NextRoundCommand));//下一个关卡
+        RegisterController(Consts.E_CreatLevel, typeof(CreatLevelCommand));//开始关卡
+        RegisterController(Consts.E_NextRound, typeof(NextRoundCommand));//下一个回合
         RegisterController(Consts.E_EndLevel, typeof(EndLevelCommand));//结束关卡
         RegisterController(Consts.E_CountDownComplete, typeof(CountDownCompleteCommand));//倒计时结束
-
+        RegisterController(Consts.E_SelectObject, typeof(SelectObjectCommand));
+        RegisterController(Consts.E_CreatMap, typeof(CreatMapCommand));
 
         RegisterController(Consts.E_SpawnMonster, typeof(SpawnerMonsterCommand));//生成怪
         RegisterController(Consts.E_SpawnTower, typeof(SpawnerTowerCommand));//生成塔
@@ -33,6 +34,6 @@ class StartUpCommand : Controller
         gModel.Initialize();
 
         //进入开始界面
-        Game.Instance.LoadScene(3);
+        Game.Instance.LoadScene(1);
     }
 }

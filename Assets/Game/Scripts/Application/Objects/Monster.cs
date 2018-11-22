@@ -12,17 +12,20 @@ public class Monster : Role
 
     #region 事件
     public event Action<Monster> Reached;
+    public event Action<Tower,int> Attacked;
     #endregion
 
     #region 字段
     public MonsterType MonsterType = MonsterType.Monster0;//怪物类型    
     public Vector3 Orientation;
-    public float m_MoveSpeed = 2;//移动速度（米/秒）
+    public float m_MoveSpeed = 1f;//移动速度（米/秒）
     List<Vector3> m_Path = null; //路径
     int m_PointIndex = 0; //当前索引
     bool m_IsReached = false;//是否到达终点
     public int damage;
     public int price;
+    public bool IsAttack=false;
+    
     #endregion
 
     #region 属性
@@ -44,12 +47,13 @@ public class Monster : Role
         MoveSpeed = info.MoveSpeed;
         damage = info.damage;
         price = info.Price;
+
+        GetHPBar();
     }
     void MoveTo(Vector3 position)
     {
         transform.position = new Vector3(position.x, transform.position.y, position.z);
     }
-
     void MoveNext()
     {
         MoveTo(m_Path[m_PointIndex]);
@@ -78,10 +82,10 @@ public class Monster : Role
     #endregion
 
     #region Unity回调
-    void Update()
+    protected virtual void Update()
     {
         //到达了终点
-        if (m_IsReached)
+        if (m_IsReached || IsDead)
             return;
 
         //当前位置
@@ -108,22 +112,40 @@ public class Monster : Role
         }
     }
     #endregion
+    public override void Damage(object From, int hit)
+    {
+        base.Damage(From, hit);
+        if (From != null)
+        {
+            Tower to = From as Tower;
+            Attacked(to, hit);
 
+        }
+    }
+    public override void OnDead(Role role)
+    {
+        base.OnDead(role);
+    }
+    protected void WaitDeadanimation()
+    {
+        transform.position = new Vector3(-10, transform.position.y, -10);
+        Invoke("OnUnspawn", 1.5f);
+    }
     #region 事件回调
     public override void OnSpawn()
     {
         base.OnSpawn();
     }
-
     public override void OnUnspawn()
     {
         base.OnUnspawn();
-
+        IsAttack = false;
         m_Path = null;
         m_PointIndex = 0;
         m_IsReached = false;
         m_MoveSpeed = 0;
         Reached = null;
+        gameObject.SetActive(false);
     }
     #endregion
 

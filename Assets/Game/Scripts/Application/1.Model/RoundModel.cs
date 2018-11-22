@@ -6,7 +6,7 @@ public class RoundModel : Model
 {
 
     #region 常量
-    public const float ROUND_INTERVAL = 5f; //回合间隔时间
+    public const float ROUND_INTERVAL = 3f; //回合间隔时间
     public const float SPAWN_INTERVAL = 1f; //出怪间隔时间
     #endregion
 
@@ -38,6 +38,27 @@ public class RoundModel : Model
     #endregion
 
     #region 方法
+    public void InitEnd(Electricity end)
+    {
+        End = end;
+        End.Hp = 100;
+        End.Dead += End_Dead;
+    }
+    public void ClearRound()
+    {
+        m_Rounds.Clear();
+        m_RoundIndex = 0;
+    }
+    private void End_Dead(Role obj)
+    {
+        EndLevelArgs endLevelArgs = new EndLevelArgs
+        {
+            IsDead = false,
+            IsSuccess = false
+        };
+        SendEvent(Consts.E_EndLevel,endLevelArgs);
+    }
+
     /// <summary>
     /// 开始一个回合
     /// </summary>
@@ -45,8 +66,13 @@ public class RoundModel : Model
     {
         if (m_RoundIndex == m_Rounds.Count)
         {
+            EndLevelArgs endLevelArgs = new EndLevelArgs
+            {
+                IsDead = false,
+                IsSuccess = true
+            };
             Debug.Log("关卡结束");
-            SendEvent(Consts.E_AllRoundsComplete);
+            SendEvent(Consts.E_EndLevel,endLevelArgs);
         }
         else
         {
@@ -60,12 +86,15 @@ public class RoundModel : Model
     {
         Game.Instance.StopCoroutine(m_Coroutine);
     }
+    int i=0;
     /// <summary>
     /// 创建一个回合
     /// </summary>
     /// <param name="monsterGroups">一个MonsterGroup的集合</param>
     public void CreateRound(List<MonsterGroup> monsterGroups)
     {
+        i++;
+        Debug.Log("建立回合"+i);
         Round NewRound = new Round(monsterGroups);
         m_Rounds.Add(NewRound);
     }
@@ -76,6 +105,7 @@ public class RoundModel : Model
     IEnumerator RunRound()
     {
         //回合开始
+        yield return new WaitForSeconds(ROUND_INTERVAL);
         StartRoundArgs e = new StartRoundArgs
         {
             RoundIndex = m_RoundIndex,
@@ -107,7 +137,6 @@ public class RoundModel : Model
                 {
                     SendEvent(Consts.E_SpawnMonster, x); //发送一个生成怪物的命令
                 }
-
             }
         }
         m_RoundIndex++;

@@ -10,25 +10,25 @@ public abstract class Bullet : ReusbleObject, IReusable
     //基本速度
     public float BaseSpeed { get;  set; }
     //基本攻击力
-    public int BaseAttack { get;  set; }
+    public int BaseDamage { get;  set; }
 
     //移动速度
     public float Speed { get { return BaseSpeed * Level; } }
     //攻击力
-    public int Demage { get { return BaseAttack * Level; } }
+    public int Demage { get { return BaseDamage * Level; } }
     //延迟回收时间(秒)
     public float DelayToDestory = 0.15f;
 
     //是否爆炸
     protected bool m_IsExploded = false;
 
-    //动画组件
-    Animator m_Animator;
+    ///动画组件
+    //Animator m_Animator;
 
 
     protected virtual void Awake()
     {
-        m_Animator = GetComponent<Animator>();
+        //m_Animator = GetComponent<Animator>();
     }
 
     protected virtual void Update()
@@ -36,7 +36,7 @@ public abstract class Bullet : ReusbleObject, IReusable
 
     }
 
-    public virtual void Load(int bulletID, int level, Monster monster)
+    public virtual void Load(int bulletID, int level, object targe, object From)
     {
 
     }
@@ -54,7 +54,7 @@ public abstract class Bullet : ReusbleObject, IReusable
         yield return new WaitForSeconds(DelayToDestory);
 
         //回收
-        Game.Instance.ObjectPool.Unspawn(gameObject);
+        OnUnspawn();
     }
 
     public override void OnSpawn()
@@ -65,5 +65,6 @@ public abstract class Bullet : ReusbleObject, IReusable
     public override void OnUnspawn()
     {
         m_IsExploded = false;
+        gameObject.SetActive(false);
     }
 }

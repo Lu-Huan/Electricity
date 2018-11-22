@@ -9,6 +9,6 @@ public class Damage : Controller
         
         Monster monster = data as Monster;
         RoundModel roundModel = GetModel<RoundModel>();
-        roundModel.End.Damage(monster.damage);
+        roundModel.End.Damage(null,monster.damage);
     }
 }

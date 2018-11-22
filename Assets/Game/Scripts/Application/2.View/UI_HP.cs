@@ -4,31 +4,28 @@ using UnityEngine.UI;
 
 public class UI_HP : MonoBehaviour
 {
-    public Transform follw=null;
-    public Role role;
-    public Image UI_BarrelHP_HP;
+    private Transform follw = null;
+    private Image UI_BarrelHP_HP;
+    private void Awake()
+    {
+        UI_BarrelHP_HP = transform.Find("hp").GetComponent<Image>();
+    }
     public void Init(Transform parent)
     {
+        transform.SetParent(GameObject.Find("Canvas").transform);
         follw = parent;
-        if (parent.tag == "Monster")
-        {
 
-            role = follw.GetComponent<Monster>();
-             
-        }
-        else if (parent.tag == "Tower")
-        {
-            role = follw.GetComponent<Tower>();
-        }
+        Role role = follw.GetComponent<Role>();
         role.HpChanged += Role_HpChanged;
         role.Dead += Role_Dead;
-        UI_BarrelHP_HP = transform.Find("hp").GetComponent<Image>();
+
         UI_BarrelHP_HP.fillAmount = 1f;
     }
 
     private void Role_Dead(Role obj)
     {
-        Game.Instance.ObjectPool.Unspawn(gameObject);
+        follw = null;
+        gameObject.SetActive(false);
     }
 
     private void Role_HpChanged(int arg1, int arg2)
@@ -40,7 +37,7 @@ public class UI_HP : MonoBehaviour
 
     private void Update()
     {
-        if (follw==null)
+        if (follw == null)
         {
             return;
         }

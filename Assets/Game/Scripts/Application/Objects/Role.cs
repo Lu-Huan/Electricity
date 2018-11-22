@@ -13,6 +13,7 @@ public abstract class Role : ReusbleObject, IReusable
     #region 事件
     public event Action<int, int> HpChanged; //血量变化
     public event Action<Role> Dead; //死亡
+    
     #endregion
 
     #region 字段
@@ -38,7 +39,8 @@ public abstract class Role : ReusbleObject, IReusable
 
             //血量变化
             if (HpChanged != null)
-            HpChanged(m_Hp, m_MaxHp);
+                HpChanged(m_Hp, m_MaxHp);
+
             //死亡事件
             if (m_Hp == 0)
             {
@@ -74,7 +76,7 @@ public abstract class Role : ReusbleObject, IReusable
     #endregion
 
     #region 方法
-    public virtual void Damage(int hit)
+    public virtual void Damage(object From, int hit)
     {
         if (IsDead)
             return;
@@ -82,9 +84,17 @@ public abstract class Role : ReusbleObject, IReusable
         Hp -= hit;
     }
 
-    protected virtual void OnDead(Role role)
+    public virtual void OnDead(Role role)
     {
 
+    }
+    /// <summary>
+    /// 生成一个UI血条
+    /// </summary>
+    protected void GetHPBar()
+    {
+        GameObject HpBar = Game.Instance.ObjectPool.Spawn("Hp");
+        HpBar.GetComponent<UI_HP>().Init(transform);
     }
     #endregion
 
@@ -92,7 +102,7 @@ public abstract class Role : ReusbleObject, IReusable
     #region 事件回调
     public override void OnSpawn()
     {
-        this.Dead += OnDead;
+        Dead += OnDead;
     }
 
     public override void OnUnspawn()

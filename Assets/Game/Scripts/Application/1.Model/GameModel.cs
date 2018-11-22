@@ -22,7 +22,7 @@ public class GameModel : Model
     int m_GameProgress = 3;
 
     //当前游戏的关卡索引
-    int m_PlayLevelIndex = -1;
+    int m_PlayLevelIndex = 0;
 
     //游戏当前金币
     int m_gold = 0;

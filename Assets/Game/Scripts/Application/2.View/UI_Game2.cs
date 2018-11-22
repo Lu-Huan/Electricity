@@ -9,20 +9,19 @@ public class UI_Game2 : View
 
     private Animator Round_An;
     private Transform Round_Tr;
-    private MapV MapV;
     public Image UI_BarrelHP_BG;
     public Image UI_BarrelHP_HP;
-    public Animator Shop;
+    private Animator Shop;
     private Transform End = null;
     public Vector2 offect = new Vector2(50, 0);
-    public Text RoundMessage;
-    public Text Enemy;
-    public Text CurrentRound;
+    private Text RoundMessage;
+    private Text Enemy;
+    private Text CurrentRound;
     private RoundModel roundModel;
     private int TotalEnemy;
     public string ResourceDir;
     public Transform[] Grid;
-    public Text MoneyText;
+    private Text MoneyText;
     public int Money
     {
         set
@@ -51,7 +50,11 @@ public class UI_Game2 : View
     public Text[] towerText;
     private Animator NoMoney;
     private Text RoundX;
+    private Slider loadingSlider;
     public GameObject Win;
+    public GameObject Fail;
+    public GameObject Dead;
+    public GameObject Load;
     public override string Name
     {
         get
@@ -59,20 +62,7 @@ public class UI_Game2 : View
             return Consts.V_UI_Game2;
         }
     }
-    public override void RegisterEvents()
-    {
-        AttentionEvents.Add(Consts.E_BugTower);
-        AttentionEvents.Add(Consts.E_ExitShop);
-        AttentionEvents.Add(Consts.E_Damage);
-        AttentionEvents.Add(Consts.E_StartRound);
-        AttentionEvents.Add(Consts.E_NextRound);
-        AttentionEvents.Add(Consts.E_MonsterDead);
-        AttentionEvents.Add(Consts.E_SpawnMonsterGroups);
-        AttentionEvents.Add(Consts.E_CompleteSpawnMonster);
-        AttentionEvents.Add(Consts.E_CompleteSpawnTower);
-        AttentionEvents.Add(Consts.E_CompleteInitMap);
-        AttentionEvents.Add(Consts.E_AllRoundsComplete);
-    }
+   
     // Use this for initialization
     void Start()
     {
@@ -86,11 +76,8 @@ public class UI_Game2 : View
         RoundMessage = GameObject.Find("Level_Round").GetComponent<Text>();
         Enemy = GameObject.Find("Enemy").GetComponent<Text>();
         CurrentRound = GameObject.Find("CurrentRound").GetComponent<Text>();
-        MapV = GameObject.Find("Map").GetComponent<MapV>();
-
-
         RoundX = transform.Find("Roundx").GetComponent<Text>();
-
+        loadingSlider = Load.transform.Find("loadingSlider").GetComponent<Slider>();
 
     }
     /*private void UI_RoundEvent_ShowComplete()//地图生成后展示关卡和回合信息
@@ -116,8 +103,23 @@ public class UI_Game2 : View
 
         CurrentMoney = Mathf.Lerp(CurrentMoney, money + 1, Time.deltaTime * 5);
         MoneyText.text = ((int)CurrentMoney).ToString();
-    }
 
+
+    }
+    public override void RegisterEvents()
+    {
+        AttentionEvents.Add(Consts.E_BugTower);
+        AttentionEvents.Add(Consts.E_ExitShop);
+        AttentionEvents.Add(Consts.E_Damage);
+        AttentionEvents.Add(Consts.E_StartRound);
+        AttentionEvents.Add(Consts.E_NextRound);
+        AttentionEvents.Add(Consts.E_MonsterDead);
+        AttentionEvents.Add(Consts.E_SpawnMonsterGroups);
+        AttentionEvents.Add(Consts.E_CompleteSpawnMonster);
+        AttentionEvents.Add(Consts.E_CompleteSpawnTower);
+        AttentionEvents.Add(Consts.E_CompleteInitMap);
+        AttentionEvents.Add(Consts.E_EndLevel);
+    }
     public override void HandleEvent(string eventName, object data)
     {
         switch (eventName)
@@ -143,9 +145,25 @@ public class UI_Game2 : View
             case Consts.E_CompleteInitMap:
                 E_CompleteInitMap();
                 break;
-            case Consts.E_AllRoundsComplete:
-                Win.SetActive(true);
+            case Consts.E_EndLevel:
+                E_EndLevel(data);
                 break;
+        }
+    }
+    private void E_EndLevel(object data)
+    {
+        EndLevelArgs endLevelArgs = data as EndLevelArgs;
+        if (endLevelArgs.IsSuccess)
+        {
+            Win.SetActive(true);
+        }
+        else if(endLevelArgs.IsDead)
+        {
+            Dead.SetActive(true);
+        }
+        else
+        {
+            Fail.SetActive(true);
         }
     }
     private void E_Damage()
@@ -162,19 +180,18 @@ public class UI_Game2 : View
         StartRoundArgs startRoundArgs = data as StartRoundArgs;
         int index = startRoundArgs.RoundIndex + 1;
         int MT = startRoundArgs.MonsterTotal;
-        int TE = TotalEnemy;
 
         RoundX.GetComponent<Animator>().SetTrigger("Roundx");
         RoundX.text = "Round " + index;
-        RoundMessage.text = "回合:" + index + "/" + startRoundArgs.RoundTotal;
-        CurrentRound.text = "剩余敌人:     /" + MT;
+        RoundMessage.text = "Round:" + index + "/" + startRoundArgs.RoundTotal;
+        CurrentRound.text = "NPC:     /" + MT;
         TotalEnemy = MT;
-        Enemy.text = "                " + TotalEnemy;
+        Enemy.text =TotalEnemy.ToString();
     }
     private void E_MonsterDead(object data)
     {
         TotalEnemy--;
-        Enemy.text = "                " + TotalEnemy;
+        Enemy.text =TotalEnemy.ToString();
         Monster monster = data as Monster;
         Money += monster.price;
     }
@@ -200,7 +217,7 @@ public class UI_Game2 : View
     {
         Debug.Log("显示关卡信息");
         Debug.Log("开始出怪");
-        SendEvent(Consts.E_StartLevel, null);//建立一个关卡
+        SendEvent(Consts.E_CreatLevel, null);//建立一个关卡
         SendEvent(Consts.E_CountDownComplete);
     }
     public void SpawnTower(int ID)
@@ -226,9 +243,22 @@ public class UI_Game2 : View
 
     //异步加载新场景
 
-    public void LoadNewScene()
+    public void LoadNewLevel()
     {
-        Game.Instance.LoadScene(4);
+        Load.SetActive(true);
+        StartCoroutine(UILoad());
+        SendEvent(Consts.E_ExitScene);
+        SendEvent(Consts.E_CreatMap);
     }
 
+    IEnumerator UILoad()
+    { 
+        for (int i = 1; i <= 20; i++)
+        {
+            loadingSlider.value = i*5;
+            yield return null;
+        }
+        Load.SetActive(false);
+        loadingSlider.value = 0;
+    }
 }

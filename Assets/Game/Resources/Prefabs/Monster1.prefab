@@ -222,21 +222,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1583869315087318
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4799878144096128}
-  m_Layer: 10
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1 &1611377565064322
 GameObject:
   m_ObjectHideFlags: 1
@@ -306,8 +291,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4392367522489560}
   - component: {fileID: 111777492394363464}
-  - component: {fileID: 114855631409157006}
   - component: {fileID: 65610352600944870}
+  - component: {fileID: 114622292415311724}
   m_Layer: 10
   m_Name: Monster1
   m_TagString: Monster
@@ -487,7 +472,7 @@ Transform:
   - {fileID: 4776871417686616}
   m_Father: {fileID: 4763938764513886}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -138.71501}
 --- !u!4 &4392367522489560
 Transform:
   m_ObjectHideFlags: 1
@@ -495,12 +480,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1691775763206612}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.03, y: 0, z: 4.18}
+  m_LocalPosition: {x: 0.914, y: 0, z: 1.711}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 4113626664688538}
   - {fileID: 4202372331470990}
-  - {fileID: 4799878144096128}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -586,7 +570,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4763938764513886}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90.00001, z: -30.709187}
 --- !u!4 &4698224097229562
 Transform:
   m_ObjectHideFlags: 1
@@ -600,7 +584,7 @@ Transform:
   - {fileID: 4497284330278434}
   m_Father: {fileID: 4763938764513886}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.96384287, y: 0, z: 30.878231}
 --- !u!4 &4729840948513622
 Transform:
   m_ObjectHideFlags: 1
@@ -614,7 +598,7 @@ Transform:
   - {fileID: 4071710545502540}
   m_Father: {fileID: 4763938764513886}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -0.66822726, y: 0, z: -38.424618}
 --- !u!4 &4734900054063406
 Transform:
   m_ObjectHideFlags: 1
@@ -674,19 +658,6 @@ Transform:
   - {fileID: 4812293585623550}
   m_Father: {fileID: 4220776705763164}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4799878144096128
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1583869315087318}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.52, z: -0.005}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4392367522489560}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4812293585623550
 Transform:
@@ -755,7 +726,7 @@ Transform:
   - {fileID: 4734900054063406}
   m_Father: {fileID: 4763938764513886}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.43624267, y: 0, z: 151.285}
 --- !u!4 &4953962647434192
 Transform:
   m_ObjectHideFlags: 1
@@ -823,11 +794,12 @@ Animation:
   - {fileID: 7400002, guid: 99e6c52476f1d254b81b9299fe09c639, type: 3}
   - {fileID: 7400004, guid: 99e6c52476f1d254b81b9299fe09c639, type: 3}
   - {fileID: 7400006, guid: 99e6c52476f1d254b81b9299fe09c639, type: 3}
+  - {fileID: 7400000, guid: fd1892bd2c870674f918166e72c89724, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 1
---- !u!114 &114855631409157006
+--- !u!114 &114622292415311724
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -835,16 +807,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 1691775763206612}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 023f7982b6c9898428b8a035842ed498, type: 3}
+  m_Script: {fileID: 11500000, guid: 2ace4630ef746224dbbca359e89585c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Hp: 100
-  m_MaxHp: 100
+  m_Hp: 0
+  m_MaxHp: 0
   MonsterType: 1
   Orientation: {x: 0, y: 0, z: 1}
   m_MoveSpeed: 1
-  damage: 5
+  damage: 0
   price: 0
+  IsAttack: 0
 --- !u!137 &137316587728565506
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -12,7 +12,7 @@ public class UI_ShowLevelImformation : View
     }
     public override void RegisterEvents()
     {
-        AttentionEvents.Add(Consts.E_StartLevel);
+        AttentionEvents.Add(Consts.E_CreatLevel);
     }
     public override void HandleEvent(string eventName, object data)
     {

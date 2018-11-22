@@ -5,15 +5,16 @@ using UnityEngine;
 public abstract class Tower : Role
 {
     public int ID { get; private set; }
-
+    public Transform ShootPoint;
     public float ShotRate { get; private set; }
     public float GuardRange { get; private set; }
     public int BasePrice { get; private set; }
-    public int UseBulletID { get; private set; }
+    public string UseBulletName { get; private set; }
 
     public Tile Tile { get; private set; }
     public List<Monster> monsters = new List<Monster>();
     public Monster m_Target = null;
+    public Monster m_BeSelect=null;
     // Animator m_Animator;
     //int m_Level;
     float m_LastShotTime = 0;
@@ -21,12 +22,26 @@ public abstract class Tower : Role
     {
         monsters.Add(mo);
         mo.Dead += Mo_Dead;
-        if (m_Target == null)
+        if (m_BeSelect==mo)
+        {
+            m_Target = m_BeSelect;
+        }
+        else if (m_Target == null)
         {
             m_Target = monsters[0];
         }
     }
-
+    public void HaveTarge(Monster monster)
+    {
+        if (monsters.Contains(monster))
+        {
+            m_Target = monster;
+        }
+        else
+        {
+            m_BeSelect = monster;
+        }
+    }
     private void Mo_Dead(Role obj)
     {
         Monster monster = obj.GetComponent<Monster>();
@@ -76,36 +91,43 @@ public abstract class Tower : Role
         ShotRate = info.ShotRate;
         BasePrice = info.BasePrice;
         GuardRange = info.GuardRange;
-        UseBulletID = info.UseBulletID;
+        BulletInfo bullteinfo = Game.Instance.StaticData.GetBulletInfo(info.UseBulletID);
+        UseBulletName = bullteinfo.PrefabName;
         MaxHp = info.MaxHp;
         Hp = MaxHp;
+
+        GetHPBar();
     }
+
+
 
     public virtual void Shot(Monster monster)
     {
-        monster.Damage(10);
+        GameObject go= Game.Instance.ObjectPool.Spawn(UseBulletName);
+        go.transform.position = ShootPoint.position;
+        go.GetComponent<Tower0Bullet>().Load(0, 1, monster,this);
     }
 
     protected virtual void LookAt(Monster target) { }
 
+    public override void OnDead(Role role)
+    {
+        //base.OnDead(role);
+        OnUnspawn();
+    }
     public override void OnSpawn()
     {
-
+        base.OnSpawn();
     }
 
     public override void OnUnspawn()
     {
-        // m_Animator.ResetTrigger("IsAttack");
-        // m_Animator.Play("Idle");
         m_Target = null;
         m_LastShotTime = 0;
-
-
-
-        /*Level = 0;
-        MaxLevel = 0;*/
         ShotRate = 0;
         BasePrice = 0;
+        //gameObject.SetActive(false);
+
     }
 
 }

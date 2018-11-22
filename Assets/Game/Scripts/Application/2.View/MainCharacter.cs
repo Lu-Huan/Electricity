@@ -10,7 +10,7 @@ public class MainCharacter : View
     MapModel mapModel;
     Actions Actions;
     PlayerController PlayerController;
-    public Monster targe = null;
+    private Role targe = null;
     public GameObject SelectedEffect;//选中怪物后的效果显示
     [SerializeField] private float ShootRate = 4;
     private float Timer = 0;
@@ -25,6 +25,7 @@ public class MainCharacter : View
     private Transform bullteLeft = null;
     private bool IsRight = true;
     private Transform YM27;
+    public int sceneindex;
     int Playerindex
     {
         set
@@ -35,7 +36,6 @@ public class MainCharacter : View
             GunID = gunInfo.ID;
             ShootRate = gunInfo.ShootRate;
             Distance = gunInfo.ShootingDistance;
-
         }
         get
         {
@@ -55,12 +55,12 @@ public class MainCharacter : View
     {
         AttentionEvents.Add(Consts.E_SpawnTower);
         AttentionEvents.Add(Consts.E_ExitShop);
+        AttentionEvents.Add(Consts.E_EnterScene);
     }
     public override void HandleEvent(string eventName, object data)
     {
         if (eventName == Consts.E_SpawnTower)
         {
-            //Animation.Play("idle");
             Actions.Stay();
             IsShop = false;
         }
@@ -68,6 +68,14 @@ public class MainCharacter : View
         {
             Actions.Stay();
             IsShop = false;
+        }
+        else if(eventName==Consts.E_EnterScene)
+        {
+            Debug.Log("收到");
+            SceneArgs sceneArgs = data as SceneArgs;
+
+            sceneindex = sceneArgs.SceneIndex ;
+ 
         }
     }
     #endregion
@@ -108,6 +116,7 @@ public class MainCharacter : View
     // Update is called once per frame
     void Update()
     {
+        TargeEffectShow();
         //冷却计时器
         Timer += Time.deltaTime;
         if (Timer >= 1f / ShootRate)
@@ -116,7 +125,7 @@ public class MainCharacter : View
             Timer = 0;
         }
 
-        TargeEffectShow();
+        
         if (Input.GetKeyDown(KeyCode.B))
         {
             if (IsShop)
@@ -165,13 +174,20 @@ public class MainCharacter : View
                 Actions.Run();
                 Speed = 3f;
                 IsWalk = true;
-                Shoot = false;
+                if (Shoot)
+                {
+                    Shoot = false;
+                }
+
             }
             else
             {
                 Actions.Walk();
                 IsWalk = true;
-                Shoot = false;
+                if (Shoot)
+                {
+                    Shoot = false;
+                }
             }
         }
         Vector3 dir = new Vector3(x, 0, z);
@@ -250,10 +266,12 @@ public class MainCharacter : View
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Debug.DrawRay(ray.origin, ray.direction, Color.red);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("Monster")))
+            
+            if (Physics.Raycast(ray, out hit, int.MaxValue, 1 << LayerMask.NameToLayer("MonsterOrMess")))
             {
-                targe = hit.collider.gameObject.GetComponent<Monster>();
+                targe = hit.collider.gameObject.GetComponent<Role>();
                 targe.Dead += Targe_Dead;
+                SendEvent(Consts.E_SelectObject, targe);
             }
             if (!Shoot)
             {
@@ -286,13 +304,13 @@ public class MainCharacter : View
     {
         if (Playerindex == 1)
         {
-            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullte");
+            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullet");
             bu.transform.position = bullteRight.position;
-            bu.GetComponent<YM3Bullte>().Load(2, 1, targe);
+            bu.GetComponent<YM3Bullet>().Load(2, 1, targe,this);
         }
         else if (Playerindex == 2)
         {
-            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullte");
+            GameObject bu = Game.Instance.ObjectPool.Spawn("Ym3Bullet");
             if (IsRight)
             {
                 bu.transform.position = bullteRight.position;
@@ -301,7 +319,7 @@ public class MainCharacter : View
             {
                 bu.transform.position = bullteLeft.position;
             }
-            bu.GetComponent<YM3Bullte>().Load(2, 1, targe);
+            bu.GetComponent<YM3Bullet>().Load(2, 1, targe,this);
             IsRight = !IsRight;
         }
         else if (Playerindex == 3)
@@ -317,6 +335,10 @@ public class MainCharacter : View
     /// </summary>
     private void TargeEffectShow()
     {
+        if (sceneindex==2)
+        {
+            return;
+        }
         if (targe != null)
         {
             SelectedEffect.transform.position = targe.Position + new Vector3(0, 0.1f, 0);
@@ -332,9 +354,9 @@ public class MainCharacter : View
     private void GetTarge()
     {
         Spawner spawner = GetModel<Spawner>();
-        if (spawner.monsters.Count > 0)
+        if (spawner.ListMonsters.Count > 0)
         {
-            targe = spawner.monsters[0];
+            targe = spawner.ListMonsters[0];//这里可能要改
             Shoot = true;
             targe.Dead += Targe_Dead;
         }
@@ -342,7 +364,6 @@ public class MainCharacter : View
         {
             targe = null;
             Actions.Attack();
-            Actions.Stay();
         }
     }
 

@@ -11,24 +11,36 @@ public class Game : ApplicationBase<Game>
     [HideInInspector] public ObjectPool ObjectPool = null; //对象池
     [HideInInspector] public Sound Sound = null;//声音控制
     [HideInInspector] public StaticData StaticData = null;//静态数据
-
+       
     //全局方法
-    public void LoadScene(int level)
+    public void LoadScene(int level, bool Asynchronous = false)
     {
-        //---退出旧场景
-        //造一个事件参数
-        SceneArgs e = new SceneArgs()
+        if (Asynchronous)
         {
-            SceneIndex = SceneManager.GetActiveScene().buildIndex //当前场景索引
-        };
-        //发布事件
-        SendEvent(Consts.E_ExitScene, e);
-
-        //---加载新场景
-        SceneManager.LoadScene(level, LoadSceneMode.Single);
-        SceneManager.sceneLoaded += LoadedEve;
+            //---异步加载新场景
+            LoadScene(4, false);
+            SceneArgs As = new SceneArgs()
+            {
+                SceneIndex = level //当前场景索引
+            };
+            Debug.Log(level);
+            SendEvent(Consts.E_AsynchronousLoading, As);
+        }
+        else
+        {
+            //---退出旧场景
+            //造一个事件参数
+            SceneArgs e = new SceneArgs()
+            {
+                SceneIndex = SceneManager.GetActiveScene().buildIndex //当前场景索引
+            };
+            //发布事件
+            SendEvent(Consts.E_ExitScene, e);
+            //---同步加载新场景
+            SceneManager.LoadScene(level, LoadSceneMode.Single);
+            SceneManager.sceneLoaded += LoadedEve;
+        }
     }
-
     void LoadedEve(Scene s, LoadSceneMode l)
     {
         if (l == LoadSceneMode.Single)
@@ -42,6 +54,20 @@ public class Game : ApplicationBase<Game>
         }
     }
 
+
+    public void Com()
+    {
+
+        Invoke("Send",1f);
+    }
+    void Send()
+    {
+        SceneArgs e = new SceneArgs()
+        {
+            SceneIndex = 3
+        };
+        SendEvent(Consts.E_EnterScene, e);
+    }
     //游戏入口
     void Start()
     {

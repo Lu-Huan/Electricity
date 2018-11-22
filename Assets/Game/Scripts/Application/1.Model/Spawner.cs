@@ -6,8 +6,8 @@ using UnityEngine;
 public class Spawner : Model
 {
     public MapModel mapM;
-    public List<Monster> monsters=new List<Monster>();
-    
+    public List<Monster> ListMonsters=new List<Monster>();
+    public List<Tower> ListTowers = new List<Tower>();
 
     public override string Name
     {
@@ -22,19 +22,12 @@ public class Spawner : Model
         string prefabName = "Monster" + MonsterID;
         GameObject go = Game.Instance.ObjectPool.Spawn(prefabName);
 
-
-        GameObject Hp = Game.Instance.ObjectPool.Spawn("Hp");
-        Hp.GetComponent<UI_HP>().Init(go.transform);
-        Hp.transform.SetParent(GameObject.Find("Canvas").transform);
-
-
-
         Monster Mo = go.GetComponent<Monster>();
         Mo.Reached += monster_Reached;
         Mo.HpChanged += monster_HpChanged;
         Mo.Dead += monster_Dead;
         Mo.Load(mapM.GetMapPath);
-        monsters.Add(Mo);
+        ListMonsters.Add(Mo);
     }
 
     private void monster_HpChanged(int arg1, int arg2)
@@ -56,12 +49,10 @@ public class Spawner : Model
     {
         //怪物回收
         Monster Mo = Ro.GetComponent<Monster>();
-        Game.Instance.ObjectPool.Unspawn(Ro.gameObject);
         SendEvent(Consts.E_MonsterDead, Mo);
-        monsters.Remove(Mo);
-        if (monsters.Count==0)
+        ListMonsters.Remove(Mo);
+        if (ListMonsters.Count==0)
         {
-            Debug.Log("运行下一个关卡");
             SendEvent(Consts.E_NextRound);
         }
     }
@@ -74,15 +65,20 @@ public class Spawner : Model
 
         Tower tower = go.GetComponent<Tower>();
         tower.Load(TowerID);
+        ListTowers.Add(tower);
+        tower.Dead += Tower_Dead;
         //SendEvent(Consts.E_CompleteSpawnTower, tower);//发送完成创建的消息
 
-        GameObject Hp = Game.Instance.ObjectPool.Spawn("Hp");
-        Hp.GetComponent<UI_HP>().Init(go.transform);
-        Hp.transform.SetParent(GameObject.Find("Canvas").transform);
+
 
         Tile tile = mapM.GetTile(pos);
         tile.Data = go;
         Debug.Log("建造了一座塔:" + go.name);
     }
-          
+
+    private void Tower_Dead(Role obj)
+    {
+        obj.GetComponent<Tower>();
+
+    }
 }

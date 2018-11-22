@@ -40,6 +40,7 @@ public static class Consts
     public const string V_UI_Game2 = "UI_Game2";
     public const string V_MainCharacter = "V_MainCharacter";
     public const string V_MapV = "V_MapV";
+    public const string V_Asynchronous = "V_Asynchronous";
 
     //Controller
     public const string E_StartUp = "E_StartUp";
@@ -47,22 +48,23 @@ public static class Consts
     public const string E_EnterScene = "E_EnterScene"; //SceneArgs
     public const string E_ExitScene = "E_ExitScene";//SceneArgs
 
-    public const string E_StartLevel = "E_StartLevel"; //StartLevelArgs
+    public const string E_CreatLevel = "E_CreatLevel"; //StartLevelArgs
     public const string E_EndLevel = "E_EndLevel";//EndLevelArgs
 
     public const string E_CountDownComplete = "E_CountDownComplete";
     public const string E_CompleteInitMap = "E_CompleteMap";
+    public const string E_CreatMap = "E_CreatMap";
 
-    
+
 
     public const string E_StartRound = "E_StartRound";//StartRoundArgs
     public const string E_NextRound = "E_NextRound";
-    public const string E_AllRoundsComplete = "E_AllRoundsComplete";
 
     public const string E_SpawnMonster = "E_SpawnMonster";//SpawnMonsterArgs
     public const string E_CompleteSpawnMonster = "E_SpawnMonster";
     public const string E_SpawnMonsterGroups = "E_SpawnMonsterGroups";
     public const string E_MonsterDead = "E_MonsterDead";
+    public const string E_SelectObject = "E_SelectObject";
 
     public const string E_SpawnTower = "E_SpawnTower";//SpawnTowerArgs
     public const string E_CompleteSpawnTower = "E_CompleteSpawnTower";
@@ -75,6 +77,7 @@ public static class Consts
     public const string E_Damage = "E_Damage";   
     public const string E_BugTower = "E_BugTower";
     public const string E_ExitShop = "E_ExitShop";
+    public const string E_AsynchronousLoading = "E_AsynchronousLoading";
 }
 
 public enum GameSpeed

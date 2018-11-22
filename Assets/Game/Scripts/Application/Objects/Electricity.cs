@@ -19,17 +19,17 @@ public class Electricity : Role
     #endregion
 
     #region 方法
-    public override void Damage(int hit)
+    public override void Damage(object date,int hit)
     {
         if (!IsDead)
         {
             //m_Animator.SetTrigger("IsDamage");
             Debug.Log("能源受伤");
         }
-        base.Damage(hit);
+        base.Damage(null,hit);
     }
 
-   protected override void OnDead(Role role)
+   public override void OnDead(Role role)
     {
         Debug.Log("终点死亡");
         //m_Animator.SetBool("IsDead", true);
