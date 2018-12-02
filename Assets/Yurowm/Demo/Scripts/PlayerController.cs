@@ -5,7 +5,6 @@ using System;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-
     public Transform rightGunBone;
     public Transform leftGunBone;
     public Arsenal[] arsenal;
@@ -37,7 +36,7 @@ public class PlayerController : MonoBehaviour
                     GameObject newRightGun = Instantiate(hand.rightGun);
                     newRightGun.transform.parent = rightGunBone;
                     newRightGun.transform.localPosition = Vector3.zero;
-                    newRightGun.transform.localRotation = Quaternion.Euler(108, 0, 0);
+                    newRightGun.transform.localRotation = Quaternion.Euler(90, 0, 0);
                     if (name== "YM-3 Pistol"||name== "Two Pistols")
                     {
                         GunYM3Right(newRightGun.transform.Find("Start"));
@@ -52,13 +51,12 @@ public class PlayerController : MonoBehaviour
                     GameObject newLeftGun = Instantiate(hand.leftGun);
                     newLeftGun.transform.parent = leftGunBone;
                     newLeftGun.transform.localPosition = Vector3.zero;
-                    newLeftGun.transform.localRotation = Quaternion.Euler(108, 0, 0);
+                    newLeftGun.transform.localRotation = Quaternion.Euler(90, 0, 0);
                     GunYM3Left(newLeftGun.transform.Find("Start"));
                 }
                 animator.runtimeAnimatorController = hand.controller;
                 return;
             }
-
         }
     }
 
@@ -70,5 +68,4 @@ public class PlayerController : MonoBehaviour
         public GameObject leftGun;
         public RuntimeAnimatorController controller;
     }
-
 }
