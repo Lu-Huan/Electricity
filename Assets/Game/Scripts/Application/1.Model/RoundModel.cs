@@ -18,6 +18,7 @@ public class RoundModel : Model
     int m_RoundIndex = 0;             //当前回合的索引
     Coroutine m_Coroutine;
     public Electricity End;
+    private bool IsEnd=false;
     #endregion
 
     #region 属性
@@ -40,6 +41,7 @@ public class RoundModel : Model
     #region 方法
     public void InitEnd(Electricity end)
     {
+        IsEnd = false;
         End = end;
         End.Hp = 100;
         End.Dead += End_Dead;
@@ -72,7 +74,11 @@ public class RoundModel : Model
                 IsSuccess = true
             };
             Debug.Log("关卡结束");
-            SendEvent(Consts.E_EndLevel,endLevelArgs);
+            if (!IsEnd)
+            {
+                IsEnd = true;
+                SendEvent(Consts.E_EndLevel, endLevelArgs);
+            }
         }
         else
         {

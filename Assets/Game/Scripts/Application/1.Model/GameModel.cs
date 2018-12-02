@@ -24,20 +24,40 @@ public class GameModel : Model
     //当前游戏的关卡索引
     int m_PlayLevelIndex = 0;
 
-    //游戏当前金币
+    //游戏金币
     int m_gold = 0;
+    //控制的角色索引
+    int m_role = 0;
 
     //是否游戏中
     bool m_IsPlaying = false;
     #endregion
 
     #region 属性//全为返回值
-    
+
     public override string Name
     {
         get { return Consts.M_GameModel; }
     }
 
+    public int Current_role
+    {
+        set
+        {
+            if (value == -1)
+            {
+                Debug.Log("异常");
+            }
+            else
+            {
+                m_role = value;
+            }
+        }
+        get
+        {
+            return m_role;
+        }
+    }
     public int Gold
     {
         get { return m_gold; }
@@ -93,6 +113,7 @@ public class GameModel : Model
     //初始化
     public void Initialize()
     {
+        m_GameProgress = 0;
         //构建Level集合
         //List<FileInfo> files = Tools.GetLevelFiles();
         List<Level> levels = new List<Level>();
@@ -116,28 +137,9 @@ public class GameModel : Model
     }
 
     //游戏结束,是否成功
-    public void EndLevel(bool isSuccess)
+    public void PushProgress()
     {
-        if (isSuccess && PlayLevelIndex > GameProgress)
-        {
-            //重新获取
-            m_GameProgress = PlayLevelIndex;
-
-            //保存
-            Saver.SetProgress(PlayLevelIndex);
-        }
-
-        //游戏停止状态
-        m_IsPlaying = false;
-    }
-
-    //清档
-    public void ClearProgress()
-    {
-        m_IsPlaying = false;
-        m_PlayLevelIndex = -1;
-        m_GameProgress = -1;
-        Saver.SetProgress(-1);
+        m_GameProgress++;
     }
 
     #endregion

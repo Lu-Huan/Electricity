@@ -135,13 +135,14 @@ public class MapModel : Model
     }
     public void Draw()
     {
-        //开启3个协程
+        //开启协程
 
+        SetGround();
         //Game.Instance.StartCoroutine(SetPlayer());//设置主角
 
         Game.Instance.StartCoroutine(SetArrow());//设置路径箭头
 
-        Game.Instance.StartCoroutine(SetGround());//设置地图杂物   
+        //Game.Instance.StartCoroutine(SetGround());//设置地图杂物   
        
     }
     #endregion
@@ -272,7 +273,6 @@ public class MapModel : Model
             if (t.IsPath)
                 t.IsPath = false;
         }
-
         MapPath.Clear();
     }
 
@@ -480,10 +480,10 @@ public class MapModel : Model
 
     #region 帮助方法
     /// <summary>
-    /// 协程：生成地面
+    /// 生成地面
     /// </summary>
     /// <returns></returns>
-    private IEnumerator SetGround()
+    private void SetGround()
     {
         foreach (Tile item in MapTiles)
         {
@@ -510,12 +510,13 @@ public class MapModel : Model
                     }
                 }
             }
-            yield return null;
         }
     }
 
     private void Box_Dead(Role obj)
     {
+        //
+        Debug.Log("清除盒子");
         Tile tile = GetTile(obj.Position);
         tile.Data = null;
     }
