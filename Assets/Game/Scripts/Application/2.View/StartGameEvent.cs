@@ -20,7 +20,7 @@ public class StartGameEvent : MonoBehaviour {
             Game.Instance.LoadScene(3);
         }
     }
-
+    
     private void OnTriggerEnter(Collider other)
     {
         Animator.SetBool(IsComing, true);

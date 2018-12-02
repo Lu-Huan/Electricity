@@ -8,6 +8,8 @@ public class Spawner : Model
     public MapModel mapM;
     public List<Monster> ListMonsters=new List<Monster>();
     public List<Tower> ListTowers = new List<Tower>();
+    public int[] Already_dead=new int [2];
+
 
     public override string Name
     {
@@ -48,6 +50,14 @@ public class Spawner : Model
     void monster_Dead(Role Ro)
     {
         //怪物回收
+        if (Ro.GetComponent<Monster0>()==null)
+        {
+            Already_dead[1]++;
+        }
+        else
+        {
+            Already_dead[0]++;
+        }
         Monster Mo = Ro.GetComponent<Monster>();
         SendEvent(Consts.E_MonsterDead, Mo);
         ListMonsters.Remove(Mo);
@@ -61,7 +71,7 @@ public class Spawner : Model
     {
         string prefabName = "Tower" + TowerID;
         GameObject go = Game.Instance.ObjectPool.Spawn(prefabName);
-        go.transform.position = pos;
+        go.transform.position = new Vector3(pos.x, go.transform.position.y, pos.z);
 
         Tower tower = go.GetComponent<Tower>();
         tower.Load(TowerID);

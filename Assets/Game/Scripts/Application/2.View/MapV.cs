@@ -88,7 +88,7 @@ public class MapV : View
     {
         switch (eventName)
         {
-            case Consts.E_BugTower:
+            case Consts.E_EnterShop:
                 DrawGizmos = true;
                 break;
             case Consts.E_ExitShop:

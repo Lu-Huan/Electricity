@@ -8,6 +8,11 @@ class ExitSceneCommand : Controller
     //退出了场景就回收所有对象
     public override void Execute(object data)
     {
-        Game.Instance.ObjectPool.UnspawnAll();
+
+        SceneArgs sceneArgs = data as SceneArgs;
+        if (sceneArgs.SceneIndex == 3)
+        {
+            Game.Instance.ObjectPool.UnspawnAll();
+        }
     }
 }

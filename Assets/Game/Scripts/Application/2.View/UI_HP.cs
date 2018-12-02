@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine.UI;
 
-public class UI_HP : MonoBehaviour
+public class UI_HP : ReusbleObject, IReusable
 {
     private Transform follw = null;
     private Image UI_BarrelHP_HP;
@@ -24,6 +24,7 @@ public class UI_HP : MonoBehaviour
 
     private void Role_Dead(Role obj)
     {
+        transform.SetParent(Game.Instance.transform);
         follw = null;
         gameObject.SetActive(false);
     }
@@ -45,4 +46,14 @@ public class UI_HP : MonoBehaviour
         transform.position = pos + new Vector2(0, 50);
     }
 
+    public override void OnSpawn()
+    {
+        
+    }
+
+    public override void OnUnspawn()
+    {
+        transform.SetParent(Game.Instance.transform);
+        gameObject.SetActive(false);
+    }
 }
