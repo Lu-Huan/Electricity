@@ -5,15 +5,16 @@ public class Tower0_Actions : Tower
 {
     private Transform head;
     private Animator animator;
+    public Transform ShootPoint;
     //private Quaternion rotate_State;
     private bool bool_fire;
     private void Awake()
     {
         head = transform.Find("acs17_part1_Gun0").Find("head");
         animator = transform.Find("acs17_part1_Gun0").GetComponent<Animator>();
-        Tower0_Ser Tower1_Ser = GetComponent<Tower0_Ser>();
-        Tower1_Ser.IN += Tower1_Ser_IN;
-        Tower1_Ser.OUT += Tower1_Ser_OUT;
+        Tower_Trigger Tower0_Ser = GetComponent<Tower_Trigger>();
+        Tower0_Ser.IN += Tower0_Ser_IN;
+        Tower0_Ser.OUT += Tower0_Ser_OUT;
         Dead += Tower0_Actions_Dead;
     }
 
@@ -22,12 +23,12 @@ public class Tower0_Actions : Tower
         head.gameObject.SetActive(false);
     }
 
-    private void Tower1_Ser_OUT(Monster obj)
+    private void Tower0_Ser_OUT(Monster obj)
     {
         MonstersRemove(obj);
     }
 
-    private void Tower1_Ser_IN(Monster obj)
+    private void Tower0_Ser_IN(Monster obj)
     {
         MonstersAdd(obj);
     }
@@ -69,6 +70,8 @@ public class Tower0_Actions : Tower
     }
     public override void Shot(Monster monster)
     {
-        base.Shot(monster);
+        GameObject go = Game.Instance.ObjectPool.Spawn(UseBulletName);
+        go.transform.position = ShootPoint.position;
+        go.GetComponent<Tower0Bullet>().Load(0, 1, monster, this);
     }
 }

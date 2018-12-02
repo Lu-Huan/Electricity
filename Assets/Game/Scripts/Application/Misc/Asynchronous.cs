@@ -79,7 +79,6 @@ public class Asynchronous : View
         if (eventName==Consts.E_AsynchronousLoading)
         {
             Debug.Log("收到消息");
-            SceneArgs args = data as SceneArgs;
         }
     }
 }

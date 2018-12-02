@@ -27,7 +27,7 @@ public static class Consts
 
     //View
     public const string V_Start1 = "V_Start1";
-    public const string V_Start2 = "V_Start2";
+    public const string V_Game1 = "V_Game1";
     public const string V_Select = "V_Select";
     public const string V_Board = "V_Board";
     public const string V_ShowLevelImformation = "V_ShowLevelImformation";
@@ -41,6 +41,11 @@ public static class Consts
     public const string V_MainCharacter = "V_MainCharacter";
     public const string V_MapV = "V_MapV";
     public const string V_Asynchronous = "V_Asynchronous";
+    public const string V_CharacterPanel = "V_CharacterPanel";
+    public const string V_Statistics="V_ Statistics";
+    public const string V_Shop = "V_Shop";
+    public const string V_TriggerShop = "V_TriggerShop";
+    public const string V_TargetEffectShow = "V_TargetEffectShow";
 
     //Controller
     public const string E_StartUp = "E_StartUp";
@@ -75,9 +80,15 @@ public static class Consts
     public const string E_ShowUpgrade = "E_ShowUpgrade";//ShowUpgradeArgs
     public const string E_HidePopup = "E_HidePopup";
     public const string E_Damage = "E_Damage";   
-    public const string E_BugTower = "E_BugTower";
+    public const string E_EnterShop = "E_BugTower";
     public const string E_ExitShop = "E_ExitShop";
     public const string E_AsynchronousLoading = "E_AsynchronousLoading";
+    public const string E_ChangeGunBack = "E_ChangeGun";
+    public const string E_BugGun = "E_BugGun";
+    public const string E_ExitGunShop = "E_ExitGunShop";
+    public const string E_SelectTarget = "E_SelectTarget";
+    public const string E_ChangeGunRequest = "E_ChangeGunRequest";
+    
 }
 
 public enum GameSpeed

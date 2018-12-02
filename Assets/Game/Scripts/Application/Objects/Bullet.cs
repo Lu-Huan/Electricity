@@ -3,6 +3,8 @@ using System.Collections;
 
 public abstract class Bullet : ReusbleObject, IReusable
 {
+    //目标
+    
     //类型
     public int ID { get;  set; }
     //等级
@@ -17,7 +19,7 @@ public abstract class Bullet : ReusbleObject, IReusable
     //攻击力
     public int Demage { get { return BaseDamage * Level; } }
     //延迟回收时间(秒)
-    public float DelayToDestory = 0.15f;
+    public float DelayToDestory = 2f;
 
     //是否爆炸
     protected bool m_IsExploded = false;
@@ -36,10 +38,7 @@ public abstract class Bullet : ReusbleObject, IReusable
 
     }
 
-    public virtual void Load(int bulletID, int level, object targe, object From)
-    {
-
-    }
+    public abstract void Load(int bulletID, int level, object monster, object from);
 
     public virtual void Explode()
     {
@@ -64,6 +63,7 @@ public abstract class Bullet : ReusbleObject, IReusable
 
     public override void OnUnspawn()
     {
+        BaseSpeed = 0;
         m_IsExploded = false;
         gameObject.SetActive(false);
     }

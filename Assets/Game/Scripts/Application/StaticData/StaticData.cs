@@ -1,6 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using LitJson;
+using System.Text.RegularExpressions;
+using System;
+
+
+class Person
+{
+    public List<Character> Persons = new List<Character>();
+}
+public class Character
+{
+    public string Name;
+    public bool[] HaveGun;
+    public string Imformation;
+}
 
 public class MonsterInfo
 {
@@ -47,6 +62,8 @@ public class StaticData : Singleton<StaticData>
     Dictionary<int, BulletInfo> m_Bullets = new Dictionary<int, BulletInfo>();
     Dictionary<int, GunInfo> m_Guns = new Dictionary<int, GunInfo>();
     Dictionary<int, BoxInfo> m_Box = new Dictionary<int, BoxInfo>();
+    //这个存在Json中
+    List<Character> m_people = new List<Character>();
     protected override void Awake()
     {
         base.Awake();
@@ -55,6 +72,7 @@ public class StaticData : Singleton<StaticData>
         InitBullets();
         InitGuns();
         InitMess();
+        ReadPeopleData();
     }
 
     void InitMonsters()
@@ -75,15 +93,16 @@ public class StaticData : Singleton<StaticData>
     void InitTowers()
     {
         m_Towers.Add(0, new TowerInfo() { ID = 0, PrefabName = "Tower0", MaxLevel = 3, BasePrice = 15, ShotRate = 4, GuardRange = 3f, UseBulletID = 0, MaxHp = 50 });
-        // m_Towers.Add(1, new TowerInfo() { ID = 1, PrefabName = "Tower1", MaxLevel = 3, BasePrice = 2, ShotRate = 0.3f, GuardRange = 3f, UseBulletID = 1, MaxHp = 50 });
+        m_Towers.Add(1, new TowerInfo() { ID = 1, PrefabName = "Tower1", MaxLevel = 3, BasePrice = 2, ShotRate = 8f, GuardRange = 3f, UseBulletID = 1, MaxHp = 50 });
+        m_Towers.Add(2, new TowerInfo() { ID = 2, PrefabName = "Tower2", MaxLevel = 3, BasePrice = 2, ShotRate = 8f, GuardRange = 3f, UseBulletID = 3, MaxHp = 50 });
     }
 
     void InitBullets()
     {
         m_Bullets.Add(0, new BulletInfo() { ID = 0, PrefabName = "Tower0Bullet", BaseDamage = 5, BaseSpeed = 6 });
-        m_Bullets.Add(1, new BulletInfo() { ID = 1, PrefabName = "Tower1Bullet", BaseDamage = 1, BaseSpeed = 2 });
+        m_Bullets.Add(1, new BulletInfo() { ID = 1, PrefabName = "Tower0Bullet", BaseDamage = 4, BaseSpeed = 9 });
         m_Bullets.Add(2, new BulletInfo() { ID = 2, PrefabName = "YM3Bullet", BaseDamage = 3, BaseSpeed = 5 });
-        m_Bullets.Add(3, new BulletInfo() { ID = 3, PrefabName = "Rocket01_Red", BaseDamage = 5, BaseSpeed = 5 });
+        m_Bullets.Add(3, new BulletInfo() { ID = 3, PrefabName = "Tower2Bullet", BaseDamage = 10, BaseSpeed = UnityEngine.Random.Range(3.5f, 4.5f) });
     }
     void InitGuns()
     {
@@ -91,6 +110,55 @@ public class StaticData : Singleton<StaticData>
         m_Guns.Add(1, new GunInfo() { ID = 1, PrefabName = "SciFiPistol_YM-3", ShootRate = 3, ShootingDistance = 5f });
         m_Guns.Add(2, new GunInfo() { ID = 2, PrefabName = "SciFiPistol_YM-3S", ShootRate = 3, ShootingDistance = 5f });
         m_Guns.Add(3, new GunInfo() { ID = 3, PrefabName = "SciFiRifle_YM-27", ShootRate = 10, ShootingDistance = 7f });
+    }
+    void InitPeople()
+    {
+        Person person = new Person();
+        person.Persons.Add(new Character()
+        {
+            Name = "零",
+            HaveGun = new bool[] { true, true, false, false },
+            Imformation = "风之少女"
+        });
+        person.Persons.Add( new Character()
+        {
+            Name = "龙峻",
+            HaveGun = new bool[] { true, true, false, false },
+            Imformation = "冷静的工程师"
+        });
+        person.Persons.Add( new Character()
+        {
+            Name = "收割者",
+            HaveGun = new bool[] { true, true, false, false },
+            Imformation = "摘下面具，那么他是？"
+        });
+        person.Persons.Add( new Character()
+        {
+            Name = "？",
+            HaveGun = new bool[] { true, true, false, false },
+            Imformation = "？？？"
+        });
+        
+        //string Data= JsonUtility.ToJson(new Person() { Persons=m_people});//数据转化为字符串
+        string Data = JsonMapper.ToJson(person);
+        Regex reg = new Regex(@"(?i)\\[uU]([0-9a-f]{4})");
+        var ss = reg.Replace(Data, delegate (Match m) { return ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString(); });
+
+        Saver.WriteJsonString(ss);//写入
+    }
+    void ReadPeopleData()
+    {
+        if (PlayerPrefs.GetInt("IsFrist",-1)==-1)
+        {
+            PlayerPrefs.SetInt("IsFrist", 0);
+            InitPeople();
+        }
+        string Data = Saver.ReadJsonString();//读取字符串
+
+
+        Person person =JsonMapper.ToObject<Person>(Data);//字符串转化为数据
+        m_people = person.Persons;
+        Debug.Log(person.Persons[0].Name);
     }
     public MonsterInfo GetMonsterInfo(int monsterID)
     {
@@ -113,5 +181,9 @@ public class StaticData : Singleton<StaticData>
     public BoxInfo GetBoxInfo(int BoxID)
     {
         return m_Box[BoxID];
+    }
+    public Character GetCharacter(int CharacterID)
+    {
+        return m_people[CharacterID];
     }
 }

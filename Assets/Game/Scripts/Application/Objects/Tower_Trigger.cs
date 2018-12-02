@@ -3,7 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower0_Ser : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class Tower_Trigger : MonoBehaviour
 {
  
     public event Action<Monster> IN;

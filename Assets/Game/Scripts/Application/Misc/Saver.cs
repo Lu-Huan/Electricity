@@ -2,16 +2,37 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using LitJson;
+using System.IO;
 
-static class Saver
+
+public static class Saver
 {
-    static public int GetProgress()
+    /// <summary>
+    /// 写入Json数据
+    /// </summary>
+    /// <param name="data">Json字符串</param>
+    public static void WriteJsonString(string data)
     {
-        return PlayerPrefs.GetInt(Consts.GameProgress, -1);
+        FileInfo file = new FileInfo(Application.persistentDataPath + "Data.json");
+        StreamWriter writer =file.CreateText();
+        writer.Write(data);
+        writer.Close();
+        writer.Dispose();
     }
 
-    static public void SetProgress(int levelIndex)
+
+    /// <summary>
+    /// 读取Json数据
+    /// </summary>
+    /// <returns>Json字符串</returns>
+    public static string ReadJsonString()
     {
-        PlayerPrefs.SetInt(Consts.GameProgress, levelIndex);
+        StreamReader reader = new StreamReader(Application.persistentDataPath + "Data.Json");
+        string JsonData = reader.ReadToEnd();
+        reader.Close();
+        reader.Dispose();
+        return JsonData;
     }
+
 }

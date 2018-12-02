@@ -7,8 +7,7 @@ using System.Collections;
 
 public class Tower0Bullet : Bullet
 {
-    //目标
-    public Monster Target { get; private set; }
+    public Monster Target;
     public Tower From;
     //移动方向
     private Vector3 Direction;

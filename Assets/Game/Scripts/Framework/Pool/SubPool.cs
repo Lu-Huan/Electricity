@@ -56,7 +56,12 @@ public class SubPool
     {
         if(Contains(go))
         {
-            go.SendMessage("OnUnspawn", SendMessageOptions.DontRequireReceiver);
+            //这里没写好，要改
+            if (go.name=="Hp")
+            {
+                go.GetComponent<UI_HP>().OnUnspawn();
+            }
+            //go.SendMessage("OnUnspawn", SendMessageOptions.DontRequireReceiver);
             go.SetActive(false);
         }
     }

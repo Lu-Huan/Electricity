@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Tower : Role
 {
     public int ID { get; private set; }
-    public Transform ShootPoint;
+    
     public float ShotRate { get; private set; }
     public float GuardRange { get; private set; }
     public int BasePrice { get; private set; }
@@ -64,7 +64,7 @@ public abstract class Tower : Role
             m_Target = monsters[0];
         }
     }
-    void Update()
+    protected virtual void Update()
     {
         //朝向目标
         LookAt(m_Target);
@@ -103,9 +103,7 @@ public abstract class Tower : Role
 
     public virtual void Shot(Monster monster)
     {
-        GameObject go= Game.Instance.ObjectPool.Spawn(UseBulletName);
-        go.transform.position = ShootPoint.position;
-        go.GetComponent<Tower0Bullet>().Load(0, 1, monster,this);
+
     }
 
     protected virtual void LookAt(Monster target) { }
