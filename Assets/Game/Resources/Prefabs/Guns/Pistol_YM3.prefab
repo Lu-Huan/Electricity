@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2300000}
   - component: {fileID: 114863369385874750}
   m_Layer: 0
-  m_Name: Pistol_YM-3
+  m_Name: Pistol_YM3
   m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,5 +124,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b2b0885df2622140ae5d1d5ce7cb398, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 1
   Name: 
   GunType: 1
+  ShootPoint: {fileID: 4127112392648892}

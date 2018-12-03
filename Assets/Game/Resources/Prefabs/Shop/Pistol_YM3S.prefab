@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4954547258728996}
   - component: {fileID: 114865701190456256}
   m_Layer: 0
-  m_Name: Pistol_YM-3S
+  m_Name: Pistol_YM3S
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,6 +200,8 @@ MonoBehaviour:
   ID: 2
   Name: 
   GunType: 2
+  Already_have: 0
+  Equiped: 0
   Attack: 3
   ShootRate: 6
   Accurate: 10

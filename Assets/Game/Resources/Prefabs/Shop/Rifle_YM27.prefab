@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23563443595970370}
   - component: {fileID: 114415031115520246}
   m_Layer: 0
-  m_Name: Rifle_YM-27
+  m_Name: Rifle_YM27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,6 +98,8 @@ MonoBehaviour:
   ID: 3
   Name: 
   GunType: 3
+  Already_have: 0
+  Equiped: 0
   Attack: 2
   ShootRate: 10
   Accurate: 5

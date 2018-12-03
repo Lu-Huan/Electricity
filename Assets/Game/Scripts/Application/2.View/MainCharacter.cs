@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
+[RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(Rigidbody))]
 public class MainCharacter : View
 {
     //人物的属性
+    public int ID;
     public float Speed = 2;
     private bool IsWalk = true;
     private bool IsShop = false;
@@ -21,10 +24,10 @@ public class MainCharacter : View
     private bool IsClose = false;
     private bool Colder = false;
     private bool BuyGun = false;
-    private bool[] HaveGun;
-    public GameObject SelectedEffect;//选中怪物后的效果显示
+    private int[] HaveEquipGun;
+    public int UseGunId;
     public int sceneindex;
-    private Role m_target=null;
+    private Role m_target = null;
     public Role Target
     {
         get
@@ -33,7 +36,7 @@ public class MainCharacter : View
         }
         set
         {
-            Target = value;
+            m_target = value;
             SendEvent(Consts.E_SelectTarget, m_target);
         }
     }
@@ -47,19 +50,24 @@ public class MainCharacter : View
     protected PlayerController PlayerController;
 
     int index = 0;
-    protected int Gunindex
+    protected int GunControllerindex
     {
         set
         {
-            index = value % PlayerController.arsenal.Count;
+            index = value % 4;
             if (index < 0)
             {
-                index = PlayerController.arsenal.Count - 1;
+                index = 3;
             }
-            GunInfo gunInfo = Game.Instance.StaticData.GetGunInfo(index);
-            GunName = gunInfo.PrefabName;
-            ShootRate = gunInfo.ShootRate;
-            Distance = gunInfo.ShootingDistance;
+            UseGunId = Game.Instance.StaticData.People[ID].EquipGunId[index];
+            if (UseGunId != -1)
+            {
+                GunInfo gunInfo = Game.Instance.StaticData.GetGunInfo(UseGunId);
+                GunName = gunInfo.PrefabName;
+                ShootRate = gunInfo.ShootRate;
+                Distance = gunInfo.ShootingDistance;
+            }
+
         }
         get
         {
@@ -69,7 +77,7 @@ public class MainCharacter : View
     public void Load(int ID)
     {
         Character character = Game.Instance.StaticData.GetCharacter(ID);
-        HaveGun = character.HaveGun;
+        HaveEquipGun = character.EquipGunId;
     }
     #region MVC
     public override string Name
@@ -88,74 +96,114 @@ public class MainCharacter : View
         AttentionEvents.Add(Consts.E_ChangeGunRequest);
         AttentionEvents.Add(Consts.E_BugGun);
         AttentionEvents.Add(Consts.E_ExitGunShop);
+
+        AttentionEvents.Add(Consts.E_EquipGun);
+        AttentionEvents.Add(Consts.E_UninstallGun);
+
+        AttentionEvents.Add(Consts.E_TrialGun);
     }
     public override void HandleEvent(string eventName, object data)
     {
-        if (eventName == Consts.E_SpawnTower)
+        switch (eventName)
         {
-            Actions.Stay();
-            IsShop = false;
-        }
-        else if (eventName == Consts.E_ExitShop)
-        {
-            IsShop = false;
-        }
-        else if (eventName == Consts.E_EnterScene)
-        {
-            Debug.Log("收到");
-            SceneArgs sceneArgs = data as SceneArgs;
-
-            sceneindex = sceneArgs.SceneIndex;
-
-        }
-        else if (eventName == Consts.E_EnterShop)
-        {
-            Tile tile = mapModel.GetTile(transform.position);
-            if (!tile.IsPath && tile.Data == null)
-            {
-                IsShop = true;
-                transform.position = tile.Position;
-            }
-        }
-        else if (eventName == Consts.E_ChangeGunRequest)
-        {
-            ChangGunRequset changGunRequset = data as ChangGunRequset;
-            if (changGunRequset.ID == -1)
-            {
-                if (changGunRequset.IsRight)
+            case Consts.E_SpawnTower:
+                Actions.Stay();
+                IsShop = false;
+                break;
+            case Consts.E_ExitShop:
+                IsShop = false;
+                break;
+            case Consts.E_EnterScene:
+                SceneArgs sceneArgs = data as SceneArgs;
+                sceneindex = sceneArgs.SceneIndex;
+                break;
+            case Consts.E_EnterShop:
+                Tile tile = mapModel.GetTile(transform.position);
+                if (!tile.IsPath && tile.Data == null)
                 {
-                    Gunindex++;
-                    while (!HaveGun[Gunindex])
-                    {
-                        Gunindex++;
-                    }
+                    IsShop = true;
+                    transform.position = tile.Position;
                 }
-                else
+                break;
+            case Consts.E_ChangeGunRequest:
+                ChangeRequestHandel(data);
+                break;
+            case Consts.E_BugGun:
+                BuyGun = true;
+                transform.position = new Vector3(3.62f, 0, -7.47f);
+                break;
+            case Consts.E_ExitGunShop:
+                BuyGun = false;
+                break;
+            case Consts.E_EquipGun:
+                Gun gun = data as Gun;
+                Game.Instance.StaticData.HaveGun[gun.ID].InBag = true;
+                Game.Instance.StaticData.SaveHaveGun();
+
+                PlayerController.EquipGun(gun);
+                GunControllerindex = (int)gun.GunType;
+                Game.Instance.StaticData.People[ID].EquipGunId[GunControllerindex] = gun.ID;
+
+                Game.Instance.StaticData.SavePeople();
+
+                break;
+            case Consts.E_UninstallGun:
+                Gun uninstallGun = data as Gun;
+                Game.Instance.StaticData.HaveGun[uninstallGun.ID].InBag = false;
+                Gun UNgun = new Gun();
+                UNgun.ID = 0;
+                UNgun.GunType = GunType.FreeHand;
+                UNgun.Name = "Empty";
+
+
+                PlayerController.EquipGun(UNgun);
+
+                Game.Instance.StaticData.HaveGun[uninstallGun.ID].InBag = false;
+                Game.Instance.StaticData.SaveHaveGun();
+
+                GunControllerindex = 0;
+                Game.Instance.StaticData.People[ID].EquipGunId[(int)uninstallGun.GunType] = -1;
+
+                Game.Instance.StaticData.SavePeople();
+                break;
+            case Consts.E_TrialGun:
+                Gun gunT = data as Gun;
+                PlayerController.EquipGun(gunT);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ChangeRequestHandel(object data)
+    {
+        ChangGunRequset changGunRequset = data as ChangGunRequset;
+        if (changGunRequset.GunID == -1)
+        {
+            if (changGunRequset.IsRight)
+            {
+                GunControllerindex++;
+                while (HaveEquipGun[GunControllerindex] == -1)
                 {
-                    Gunindex--;
-                    while (!HaveGun[Gunindex])
-                    {
-                        Gunindex--;
-                    }
+                    GunControllerindex++;
                 }
             }
             else
             {
-                Gunindex = changGunRequset.ID;
-
+                GunControllerindex--;
+                while (HaveEquipGun[GunControllerindex] == -1)
+                {
+                    GunControllerindex--;
+                }
             }
-            Debug.Log(Gunindex);
-            ChangeGun();
         }
-        else if (eventName == Consts.E_BugGun)
+        else
         {
-            BuyGun = true;
-            transform.position = new Vector3(3.62f, 0, -7.47f);
+            GunControllerindex = changGunRequset.GunID;
+
         }
-        else if (eventName == Consts.E_ExitGunShop)
-        {
-            BuyGun = false;
-        }
+        Debug.Log(GunControllerindex);
+        ChangeGun();
     }
     #endregion
 
@@ -168,8 +216,7 @@ public class MainCharacter : View
         //Animation.Play("idle");
         Actions.Stay();
         mapModel = GetModel<MapModel>();
-        Gunindex = 0;
-
+        GunControllerindex = 0;
     }
 
 
@@ -261,7 +308,7 @@ public class MainCharacter : View
                 transform.position += dir * Time.deltaTime * Speed;
                 Actions.Walk();
                 float s = Distance * 2f / 3f;
-                if (Gunindex == 0)
+                if (GunControllerindex == 0)
                 {
                     s = 0.1f;
                 }
@@ -325,17 +372,44 @@ public class MainCharacter : View
     /// <summary>
     /// 虚函数给子类实现子弹的发射方式
     /// </summary>
-    protected virtual void InstanceBullte() { }
+    protected virtual void InstanceBullte()
+    {
+        switch (GunControllerindex)
+        {
+            case 0:
+                break;
+            case 1:
+                PlayerController.rightGunBone.GetChild(0).GetComponent<Gun>().Shoot(Target);
+
+                break;
+            case 2:
+                if (IsRight)
+                {
+                    PlayerController.rightGunBone.GetChild(0).GetComponent<Gun>().Shoot(Target);
+                }
+                else
+                {
+                    PlayerController.leftGunBone.GetChild(0).GetComponent<Gun>().Shoot(Target);
+                }
+                IsRight =!IsRight;
+                break;
+            case 3:
+                PlayerController.rightGunBone.GetChild(0).GetComponent<Gun>().Shoot(Target);
+                break;
+            default:
+                break;
+        }
+    }
 
     /// <summary>
     /// 虚函数 子类可在换枪后加行为
     /// </summary>
     protected virtual void ChangeGun()
     {
-        PlayerController.SetArsenal(Gunindex);
+        PlayerController.EquipGun(GunControllerindex);
         ChangGunBackArgs args = new ChangGunBackArgs
         {
-            GunID = index,
+            GunID = UseGunId,
             GunName = GunName
         };
         SendEvent(Consts.E_ChangeGunBack, args);

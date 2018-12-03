@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 114334711181492834}
   - component: {fileID: 114141307783663236}
   m_Layer: 0
-  m_Name: Rifle_YM-27
+  m_Name: Rifle_YM27
   m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -500,6 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a84d9b6c758cba49a2cc4ad6ccc7897, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 3
   Name: 
   GunType: 3
 --- !u!114 &114334711181492834

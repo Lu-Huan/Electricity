@@ -11,5 +11,19 @@ public class ChangGunBackArgs
 public class ChangGunRequset
 {
     public bool IsRight;
-    public int ID;
+    public int GunID;
+}
+
+public class EquipGunRequset
+{
+    public int GunID;
+}
+
+public class UninstallGun
+{
+   public  int GunID;
+}
+public class TrialGun
+{
+    public int GunID;
 }

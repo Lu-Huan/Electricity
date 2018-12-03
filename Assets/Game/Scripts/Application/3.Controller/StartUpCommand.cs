@@ -32,19 +32,9 @@ class StartUpCommand : Controller
         //初始化
        GameModel gModel = GetModel<GameModel>();
         gModel.Initialize();
-        if (-1==PlayerPrefs.GetInt("CurrentChar", -1))
-        {
-            //拥有的人物
-            PlayerPrefs.SetInt("Char" + 0, 1);
-            PlayerPrefs.SetInt("Char" + 1, 0);
-            PlayerPrefs.SetInt("Char" + 2, 0);
-            PlayerPrefs.SetInt("Char" + 3, 0);
-            //当前的角色
-            PlayerPrefs.SetInt("CurrentChar", 0);
-            //能量
-            PlayerPrefs.SetInt("ElectricEnergy", 100);
-        }
-        gModel.Current_role = PlayerPrefs.GetInt("CurrentChar", -1);   
+
+
+        gModel.Current_role = PlayerPrefs.GetInt("CurrentChar", -1);
         //进入开始界面
         Game.Instance.LoadScene(1);
     }

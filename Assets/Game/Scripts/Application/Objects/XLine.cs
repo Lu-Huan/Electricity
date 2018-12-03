@@ -10,6 +10,10 @@ public class XLine : MonoBehaviour
     public GameObject Bullte;
     void Update()
     {
+        if (!Shoot)
+        {
+            return;
+        }
         RaycastHit hit;
         Vector3 Sc;// 变换大小
         Sc.x = 0.5f;
@@ -20,14 +24,13 @@ public class XLine : MonoBehaviour
             Sc.y = hit.distance;
             FXef.transform.position = hit.point;//让激光击中物体的粒子效果的空间位置与射线碰撞的点的空间位置保持一致；
             FXef.SetActive(true);
-            if (Shoot)
+
+            if (hit.collider.gameObject.tag == "Monster")
             {
-                if (hit.collider.gameObject.tag == "Monster")
-                {
-                    hit.collider.gameObject.GetComponent<Monster>().Damage(null,2);
-                    Shoot = false;
-                }
+                hit.collider.gameObject.GetComponent<Monster>().Damage(null, 2);
+                Shoot = false;
             }
+
         }
         //当激光没有碰撞到物体时，让射线的长度保持为500m，并设置击中效果为不显示
         else

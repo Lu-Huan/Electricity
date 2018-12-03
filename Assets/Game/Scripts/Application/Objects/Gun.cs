@@ -14,10 +14,11 @@ public enum GunType
     Rifle
 }
 [Serializable]
-public class Gun : MonoBehaviour
+public  class Gun : MonoBehaviour
 {
     public int ID;
     public string Name;
     public GunType GunType;
+    public virtual void Shoot(Role Target) { }
 }
 

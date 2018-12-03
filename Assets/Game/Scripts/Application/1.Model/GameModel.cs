@@ -12,7 +12,6 @@ public class GameModel : Model
     #endregion
 
     #region 字段
-
     public GameObject MainCharater;
     //所有的关卡
     List<Level> m_Levels = new List<Level>();
@@ -51,6 +50,8 @@ public class GameModel : Model
             else
             {
                 m_role = value;
+                PlayerPrefs.SetInt("CurrentChar", value);
+                SendEvent(Consts.E_ChangeMainCharater);
             }
         }
         get

@@ -82,10 +82,10 @@ public class CharacterPanel : View
         actions = character[index].GetComponent<Actions>();
         controller = character[index].GetComponent<PlayerController>();
 
-        for (int i = 0; i < controller.arsenal.Count; i++)
+       /* for (int i = 0; i < controller.arsenal.Count; i++)
         {
             CreateWeaponButton(controller.arsenal[i].name, index,i);
-        }
+        }*/
     }
 
     private void SetButton()
@@ -114,12 +114,12 @@ public class CharacterPanel : View
     /// </summary>
     /// <param name="name">武器的名字</param>
     /// <param name="id">所属哪个buttons集合</param>
-    void CreateWeaponButton(string name, int Listid,int GunId)
+   /* void CreateWeaponButton(string name, int Listid,int GunId)
     {
         Button button = CreateButton(name, weaponsPanel);
         button.onClick.AddListener(() => controller.SetArsenal(GunId));
         buttons[Listid].Add(button);
-    }
+    }*/
 
     void CreateActionButton(string name)
     {

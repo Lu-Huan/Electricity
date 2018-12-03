@@ -46,6 +46,7 @@ public static class Consts
     public const string V_Shop = "V_Shop";
     public const string V_TriggerShop = "V_TriggerShop";
     public const string V_TargetEffectShow = "V_TargetEffectShow";
+    public const string V_CharController = "V_CharController";
 
     //Controller
     public const string E_StartUp = "E_StartUp";
@@ -88,7 +89,12 @@ public static class Consts
     public const string E_ExitGunShop = "E_ExitGunShop";
     public const string E_SelectTarget = "E_SelectTarget";
     public const string E_ChangeGunRequest = "E_ChangeGunRequest";
-    
+    public const string E_EquipGun = "E_EquipGun";
+    public const string E_UninstallGun = "E_Uninstall";
+    public const string E_TrialGun = "E_Trial";
+    public const string E_ChangeMainCharater = "E_ChangeMainCharater";
+
+
 }
 
 public enum GameSpeed

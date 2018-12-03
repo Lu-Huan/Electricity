@@ -19,17 +19,17 @@ class Person
 }
 class Bag_Gun
 {
-    public List<HaveGun> haveGuns;
+    public List<HaveGun> haveGuns = new List<HaveGun>();
 }
 public class HaveGun
 {
     public int ID;
     public bool Have;
+    public bool InBag;
 }
 public class Character
 {
     public string Name;
-    public bool[] HaveGun;
     public int[] EquipGunId;
     public string Imformation;
 }
@@ -66,6 +66,8 @@ public class GunInfo
     public string PrefabName;
     public float ShootRate;
     public float ShootingDistance;
+
+    public GunType GunType;
 }
 public class BoxInfo
 {
@@ -80,15 +82,65 @@ public class StaticData : Singleton<StaticData>
     Dictionary<int, MonsterInfo> m_Monsters = new Dictionary<int, MonsterInfo>();
     Dictionary<int, TowerInfo> m_Towers = new Dictionary<int, TowerInfo>();
     Dictionary<int, BulletInfo> m_Bullets = new Dictionary<int, BulletInfo>();
-    Dictionary<int, GunInfo> m_Guns = new Dictionary<int, GunInfo>();
+    List<GunInfo> m_Guns = new List<GunInfo>();
     Dictionary<int, BoxInfo> m_Box = new Dictionary<int, BoxInfo>();
     //在资源文件夹里
-    public RuntimeAnimatorController[] Controllers;//角色控制器
+    public RuntimeAnimatorController[] Controllers { private set; get; }//角色控制器
+    //public Dictionary<string, GameObject> GunPrefabs { private set; get; }// 枪的预制
     //存在Json数据中
-    public List<Character> m_people = new List<Character>();
-    public List<HaveGun> m_haveGun = new List<HaveGun>();
+    private List<Character> m_people = new List<Character>();
+    private List<HaveGun> m_haveGun = new List<HaveGun>();
     #endregion
+    public List<HaveGun> HaveGun
+    {
+        get
+        {
+            return m_haveGun;
+        }
+        set
+        {
+            m_haveGun = value;
 
+        }
+    }
+    public void SaveHaveGun()
+    {
+        Bag_Gun bag_Gun = new Bag_Gun
+        {
+            haveGuns = HaveGun
+        };
+
+        Debug.Log("写入枪的数据");
+        string GunData = JsonMapper.ToJson(bag_Gun);
+
+        Saver.WriteJsonString(GunData, Saver.GunDataPath);
+    }
+    public void SavePeople()
+    {
+
+        Person person = new Person
+        {
+            Persons = People
+        };
+        string Data = JsonMapper.ToJson(person);//数据转化为字符串
+        Regex reg = new Regex(@"(?i)\\[uU]([0-9a-f]{4})");
+        var ss = reg.Replace(Data, delegate (Match m) { return ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString(); });
+
+        Saver.WriteJsonString(ss, Saver.CharacterDataPath);//写入
+        Debug.Log("写入人物数据");
+    }
+    public List<Character> People
+    {
+        get
+        {
+            return m_people;
+        }
+        set
+        {
+            m_people = value;
+
+        }
+    }
     protected override void Awake()
     {
         base.Awake();
@@ -97,21 +149,41 @@ public class StaticData : Singleton<StaticData>
         InitBullets();
         InitGuns();
         InitMess();
-
+        PlayerPrefs.DeleteAll();
         //是否第一次加载
         if (PlayerPrefs.GetInt("IsFrist", -1) == -1)
         {
+            //拥有的人物
+            PlayerPrefs.SetInt("Char" + 0, 1);
+            PlayerPrefs.SetInt("Char" + 1, 0);
+            PlayerPrefs.SetInt("Char" + 2, 0);
+            PlayerPrefs.SetInt("Char" + 3, 0);
+            //当前的角色    
+            PlayerPrefs.SetInt("CurrentChar", 0);
+            //能量
+            PlayerPrefs.SetInt("ElectricEnergy", 10000);
+
             PlayerPrefs.SetInt("IsFrist", 0);
             InitPeople();
-            InitGuns();
+            InitHaveGun();
         }
+
+
 
 
         ReadPeopleData();
         ReadGunData();
         //加载所有控制器
         string path = "Controllers";
-        RuntimeAnimatorController[] Controllers = Resources.LoadAll<RuntimeAnimatorController>(path);
+        Controllers = Resources.LoadAll<RuntimeAnimatorController>(path);
+
+        /*path = "Prefabs/Guns";
+        GameObject[] GunPrefabAll = Resources.LoadAll<GameObject>(path);
+
+        foreach (GameObject item in GunPrefabAll)
+        {
+            Game.Instance.ObjectPool.
+        }*/
     }
     #region 初始化游戏数据
     void InitMonsters()
@@ -145,25 +217,30 @@ public class StaticData : Singleton<StaticData>
     }
     void InitGuns()
     {
-        m_Guns.Add(0, new GunInfo() { ID = 0, PrefabName = "Empty", ShootRate = 3, ShootingDistance = 1f });
-        m_Guns.Add(1, new GunInfo() { ID = 1, PrefabName = "SciFiPistol_YM-3", ShootRate = 3, ShootingDistance = 5f });
-        m_Guns.Add(2, new GunInfo() { ID = 2, PrefabName = "SciFiPistol_YM-3S", ShootRate = 3, ShootingDistance = 5f });
-        m_Guns.Add(3, new GunInfo() { ID = 3, PrefabName = "SciFiRifle_YM-27", ShootRate = 10, ShootingDistance = 7f });
+        m_Guns.Add(new GunInfo() { ID = 0, PrefabName = "Empty", ShootRate = 3, ShootingDistance = 1f, GunType = GunType.FreeHand });
+        m_Guns.Add(new GunInfo() { ID = 1, PrefabName = "Pistol_YM3", ShootRate = 3, ShootingDistance = 5f, GunType = GunType.OnePistol });
+        m_Guns.Add(new GunInfo() { ID = 2, PrefabName = "Pistol_YM3S", ShootRate = 3, ShootingDistance = 5f, GunType = GunType.TwoPistol });
+        m_Guns.Add(new GunInfo() { ID = 3, PrefabName = "Rifle_YM27", ShootRate = 10, ShootingDistance = 7f, GunType = GunType.Rifle });
+        m_Guns.Add(new GunInfo() { ID = 4, PrefabName = "AssaultRifle", ShootRate = 8, ShootingDistance = 7f, GunType = GunType.Rifle });
+        m_Guns.Add(new GunInfo() { ID = 5, PrefabName = "SilencedPistol", ShootRate = 7, ShootingDistance = 7f, GunType = GunType.OnePistol });
+        m_Guns.Add(new GunInfo() { ID = 6, PrefabName = "SilencedPistolS", ShootRate = 7, ShootingDistance = 7f, GunType = GunType.TwoPistol });
+        m_Guns.Add(new GunInfo() { ID = 7, PrefabName = "SniperGun", ShootRate = 1, ShootingDistance = 10f, GunType = GunType.Rifle });
+        m_Guns.Add(new GunInfo() { ID = 8, PrefabName = "SubmachineGun", ShootRate = 11, ShootingDistance = 7f, GunType = GunType.OnePistol });
+        m_Guns.Add(new GunInfo() { ID = 9, PrefabName = "SubmachineGunS", ShootRate = 11, ShootingDistance = 7f, GunType = GunType.TwoPistol });
     }
     void InitHaveGun()
     {
         Bag_Gun bag_Gun = new Bag_Gun();
-
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 0, Have = true });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 1, Have = true });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 2, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 3, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 4, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 5, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 6, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 7, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 8, Have = false });
-        bag_Gun.haveGuns.Add(new HaveGun() { ID = 9, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 0, Have = true, InBag = true });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 1, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 2, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 3, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 4, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 5, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 6, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 7, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 8, Have = false, InBag = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 9, Have = false, InBag = false });
 
         string GunData = JsonMapper.ToJson(bag_Gun);
 
@@ -182,28 +259,24 @@ public class StaticData : Singleton<StaticData>
         person.Persons.Add(new Character()
         {
             Name = "零",
-            HaveGun = new bool[] { true, true, false, false },
-            EquipGunId=new int[] {0,1,-1,-1},
-            Imformation = "风之少女"
+            EquipGunId = new int[] { 0, -1, -1, -1 },
+            Imformation = "机械少女"
         });
         person.Persons.Add(new Character()
         {
             Name = "龙峻",
-            HaveGun = new bool[] { true, false, false, false },
             EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "冷静的工程师"
         });
         person.Persons.Add(new Character()
         {
             Name = "收割者",
-            HaveGun = new bool[] { true, false, false, false },
             EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "摘下面具，那么他是？"
         });
         person.Persons.Add(new Character()
         {
             Name = "？",
-            HaveGun = new bool[] { true, false, false, false },
             EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "？？？"
         });

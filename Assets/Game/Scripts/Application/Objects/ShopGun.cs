@@ -7,6 +7,7 @@ using UnityEngine;
 public class ShopGun:Gun
 {
     public bool Already_have;
+    public bool Equiped;
     public int Attack;
     public float ShootRate;
     public float Accurate;

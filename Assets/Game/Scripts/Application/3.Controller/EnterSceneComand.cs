@@ -24,6 +24,7 @@ class EnterSceneComand : Controller
                 RegisterView(GameObject.Find("Tigger1_Shop").GetComponent<TriggerShop>());
                 RegisterView(GameObject.Find("Character").GetComponent<MainCharacter>());
                 GetModel<GameModel>().MainCharater = GameObject.Find("Character");
+                RegisterView(GameObject.Find("CharController").GetComponent<CharController>());
                 break;
             case 3://Level
                 GameObject Character = GameObject.Find("Character");

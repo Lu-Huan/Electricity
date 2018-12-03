@@ -12,13 +12,21 @@ public class Shop : View
     public GameObject CameraGun;
     public Button Left;
     public Button Right;
-    public Button Equip;
+
+    public Button Buy;
+    public Button trial;
+    bool Istrial = false;
+
+    //装备 和卸载
+    public GameObject ToggleGroup;
     private int m_Gunindex = 0;
 
     public Text Price;
     public Text Attribute;
     public Text Imformation;
-    private bool rotating=false;
+    public Text GunName;
+    private bool rotating = false;
+    public Text NoMoney;
     public int GunIndex
     {
         set
@@ -27,7 +35,7 @@ public class Shop : View
             {
                 Left.gameObject.SetActive(false);
             }
-            else if (value == Guns.Count-1)
+            else if (value == Guns.Count - 1)
             {
                 Right.gameObject.SetActive(false);
             }
@@ -37,6 +45,9 @@ public class Shop : View
                 Right.gameObject.SetActive(true);
             }
             m_Gunindex = value;
+
+
+
         }
         get
         {
@@ -65,25 +76,70 @@ public class Shop : View
     // Use this for initialization
     void Start()
     {
-        GunIndex = 0;
+        CameraGun.transform.position = new Vector3(400, 300, CameraGun.transform.position.z);
+        for (int i = 0; i < Guns.Count; i++)
+        {
+            Guns[i].Already_have = Game.Instance.StaticData.HaveGun[Guns[i].ID].Have;
+            Guns[i].Equiped = Game.Instance.StaticData.HaveGun[Guns[i].ID].InBag;
+        }
+
         transform.Find("Back").GetComponent<Button>().onClick.AddListener(() =>
         {
             SendEvent(Consts.E_ExitGunShop);
         });
-        Equip.onClick.AddListener(() =>
+        ToggleGroup.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() =>
         {
-            int ch=GetModel<GameModel>().Current_role;
-            //if (Guns[m_Gunindex].Char==ch)
-           // {
-                ChangGunRequset changGunRequset = new ChangGunRequset
-                {
-                    //ID = Guns[m_Gunindex].Id
-                };
-                SendEvent(Consts.E_ChangeGunRequest, changGunRequset);
-           // }
+            Uninstall();
         });
+
+        ToggleGroup.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() =>
+        {
+            Equip();
+        });
+        SortGun();
+        GunIndex = 0;
+        Show();
     }
 
+
+    private void Equip()
+    {
+        SendEvent(Consts.E_EquipGun, Guns[m_Gunindex]);
+    }
+    private void Uninstall()
+    {
+
+        SendEvent(Consts.E_UninstallGun, Guns[m_Gunindex]);
+    }
+    public void BugGun()
+    {
+        int ele = PlayerPrefs.GetInt("ElectricEnergy", -1);
+        if (Guns[m_Gunindex].Price <= ele)
+        {
+            Game.Instance.StaticData.HaveGun[m_Gunindex].Have = true;
+            Game.Instance.StaticData.SaveHaveGun();
+
+            Guns[m_Gunindex].Already_have = true;
+            ele -= Guns[m_Gunindex].Price;
+            PlayerPrefs.SetInt("ElectricEnergy", ele);
+            transform.parent.GetComponent<UI_Game1>().ReMoney();
+            Show();
+        }
+        else
+        {
+            NoMoney.gameObject.SetActive(true);
+            Invoke("Hide", 1f);
+        }
+    }
+    void Hide()
+    {
+        NoMoney.gameObject.SetActive(false);
+    }
+    public void Trial()
+    {
+        Istrial = true;
+        SendEvent(Consts.E_TrialGun, Guns[m_Gunindex]);
+    }
     /// <summary>
     /// 用于排列枪
     /// </summary>
@@ -91,7 +147,7 @@ public class Shop : View
     {
         for (int i = 0; i < Guns.Count; i++)
         {
-            Guns[i].transform.position = new Vector3(400+i*2, 300, Guns[i].transform.position.z);
+            Guns[i].transform.position = new Vector3(400 + i * 2, 300, Guns[i].transform.position.z);
         }
     }
     private void Update()
@@ -120,9 +176,9 @@ public class Shop : View
         }*/
         if (!rotating)
         {
-            Guns[GunIndex].transform.Rotate(0, 1, 0);
+            Guns[GunIndex].transform.Rotate(0, 0.5f, 0);
         }
-        if (Input.GetMouseButtonDown(0)&&
+        if (Input.GetMouseButtonDown(0) &&
             RectTransformUtility.RectangleContainsScreenPoint(RawImage, Input.mousePosition))
         {
             StartToucePos = Input.mousePosition;
@@ -155,9 +211,27 @@ public class Shop : View
     }
     private void Show()
     {
+        GunName.text = Guns[m_Gunindex].name;
         Price.text = Guns[m_Gunindex].Price.ToString();
-       // string UseChar= PlayerPrefs.GetString("Char"+ Guns[m_Gunindex].Char+ "Name",null);
-        //Imformation.text = Guns[m_Gunindex].Imformation + "\r\n" + "使用者:"+UseChar;
+        // string UseChar= PlayerPrefs.GetString("Char"+ Guns[m_Gunindex].Char+ "Name",null);
+        bool Have = Guns[m_Gunindex].Already_have;
+        trial.gameObject.SetActive(!Have);
+        Buy.gameObject.SetActive(!Have);
+
+
+        Price.transform.parent.gameObject.SetActive(!Have);
+        ToggleGroup.SetActive(Have);
+        if (Have)
+        {
+            bool Equip = Guns[m_Gunindex].Equiped;
+            ToggleGroup.transform.GetChild(0).gameObject.SetActive(Equip);
+
+            ToggleGroup.transform.GetChild(1).gameObject.SetActive(!Equip);
+        }
+
+
+
+        Imformation.text = Guns[m_Gunindex].Imformation;
         string Attack = "伤害:";
         for (int i = 0; i < Guns[m_Gunindex].Attack; i++)
         {
@@ -182,6 +256,12 @@ public class Shop : View
     }
     public void Move(int dir)
     {
+        if (Istrial)
+        {
+            Uninstall();
+            Istrial = false;
+        }
+
         if (!GoMove)
         {
             TarPos_x = CameraGun.transform.position.x + dir;

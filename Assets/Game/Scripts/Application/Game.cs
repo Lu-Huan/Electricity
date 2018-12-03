@@ -10,7 +10,7 @@ public class Game : ApplicationBase<Game>
     //全局访问功能
     [HideInInspector] public ObjectPool ObjectPool = null; //对象池
     [HideInInspector] public Sound Sound = null;//声音控制
-    [HideInInspector] public StaticData StaticData = null;//静态数据
+    [HideInInspector] public StaticData  StaticData = null;//静态数据
        
     //全局方法
     public void LoadScene(int level, bool Asynchronous = false)

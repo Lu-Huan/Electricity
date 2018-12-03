@@ -93,7 +93,7 @@ public class UI_Game2 : View
             ChangGunRequset changGunRequset = new ChangGunRequset
             {
                 IsRight = false,
-                ID = -1
+                GunID = -1
             };
             SendEvent(Consts.E_ChangeGunRequest,changGunRequset);
         });
@@ -103,7 +103,7 @@ public class UI_Game2 : View
             ChangGunRequset changGunRequset = new ChangGunRequset
             {
                 IsRight = true,
-                ID = -1
+                GunID = -1
             };
             SendEvent(Consts.E_ChangeGunRequest, changGunRequset);
         });

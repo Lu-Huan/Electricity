@@ -42,7 +42,10 @@ public class UI_Game1 : View
         });
 
     }
-
+    public void ReMoney()
+    {
+        ElectricEnergy.text = PlayerPrefs.GetInt("ElectricEnergy", -1).ToString();
+    }
     // Update is called once per frame
     
     public void Exit()
