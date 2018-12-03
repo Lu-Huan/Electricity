@@ -8,13 +8,15 @@ using System.IO;
 
 public static class Saver
 {
+    public static string CharacterDataPath = Application.persistentDataPath + "Data.json";
+    public static string GunDataPath = Application.persistentDataPath + "GunData.json";
     /// <summary>
     /// 写入Json数据
     /// </summary>
     /// <param name="data">Json字符串</param>
-    public static void WriteJsonString(string data)
+    public static void WriteJsonString(string data,string Path)
     {
-        FileInfo file = new FileInfo(Application.persistentDataPath + "Data.json");
+        FileInfo file = new FileInfo(Path);
         StreamWriter writer =file.CreateText();
         writer.Write(data);
         writer.Close();
@@ -26,9 +28,9 @@ public static class Saver
     /// 读取Json数据
     /// </summary>
     /// <returns>Json字符串</returns>
-    public static string ReadJsonString()
+    public static string ReadJsonString(string Path)
     {
-        StreamReader reader = new StreamReader(Application.persistentDataPath + "Data.Json");
+        StreamReader reader = new StreamReader(Path);
         string JsonData = reader.ReadToEnd();
         reader.Close();
         reader.Dispose();

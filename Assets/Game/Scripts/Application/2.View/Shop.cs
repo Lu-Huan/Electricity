@@ -73,15 +73,26 @@ public class Shop : View
         Equip.onClick.AddListener(() =>
         {
             int ch=GetModel<GameModel>().Current_role;
-            if (Guns[m_Gunindex].Char==ch)
-            {
+            //if (Guns[m_Gunindex].Char==ch)
+           // {
                 ChangGunRequset changGunRequset = new ChangGunRequset
                 {
-                    ID = Guns[m_Gunindex].Id
+                    //ID = Guns[m_Gunindex].Id
                 };
                 SendEvent(Consts.E_ChangeGunRequest, changGunRequset);
-            }
+           // }
         });
+    }
+
+    /// <summary>
+    /// 用于排列枪
+    /// </summary>
+    private void SortGun()
+    {
+        for (int i = 0; i < Guns.Count; i++)
+        {
+            Guns[i].transform.position = new Vector3(400+i*2, 300, Guns[i].transform.position.z);
+        }
     }
     private void Update()
     {
@@ -145,8 +156,8 @@ public class Shop : View
     private void Show()
     {
         Price.text = Guns[m_Gunindex].Price.ToString();
-        string UseChar= PlayerPrefs.GetString("Char"+ Guns[m_Gunindex].Char+ "Name",null);
-        Imformation.text = Guns[m_Gunindex].Imformation + "\r\n" + "使用者:"+UseChar;
+       // string UseChar= PlayerPrefs.GetString("Char"+ Guns[m_Gunindex].Char+ "Name",null);
+        //Imformation.text = Guns[m_Gunindex].Imformation + "\r\n" + "使用者:"+UseChar;
         string Attack = "伤害:";
         for (int i = 0; i < Guns[m_Gunindex].Attack; i++)
         {

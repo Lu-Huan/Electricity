@@ -6,7 +6,8 @@ using UnityEngine;
 
 public class Character0 : MainCharacter
 {
-    private Transform YM27;//换
+    //RuntimeAnimatorController
+    private Transform YM27;
     /// <summary>
     /// 实列化子弹
     /// </summary>
@@ -36,6 +37,7 @@ public class Character0 : MainCharacter
         {
             Vector3 offet = Target.Position + new Vector3(0, 0.2f, 0) - YM27.position;
             float angle = Vector3.Angle(offet, Vector3.up);
+            angle = Mathf.Clamp(angle, 90, 100);
             YM27.localEulerAngles = new Vector3(angle, 0, 0);
             YM27.GetComponent<XLine>().CanShoot();
         }
@@ -43,23 +45,26 @@ public class Character0 : MainCharacter
 
     private void Start()
     {
-        PlayerController.GunYM3Right += GunYM3right;
-        PlayerController.GunYM3Left += GunYM3Left;
-        PlayerController.GunYM27 += GunYM27;
+        //PlayerController.arsenal.Add(new Arsenal())
     }
-    #region 对PlayerController的委托
-    private void GunYM3Left(Transform obj)
+    #region 得到位置
+    protected override void ChangeGun()
     {
-        bullteLeft = obj;
+        base.ChangeGun();
+
     }
-    private void GunYM27(Transform obj)
+    private void GunYM3Left()
     {
-        YM27 = obj;
+        bullteLeft = PlayerController.leftGunBone.GetChild(0).Find("Start");
+    }
+    private void GunYM27()
+    {
+        YM27 = PlayerController.rightGunBone.GetChild(0);
     }
 
-    private void GunYM3right(Transform obj)
+    private void GunYM3right()
     {
-        bullteRight = obj;
+        bullteRight = PlayerController.rightGunBone.GetChild(0).Find("Start");
     }
      #endregion
 }

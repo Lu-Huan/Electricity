@@ -5,15 +5,32 @@ using LitJson;
 using System.Text.RegularExpressions;
 using System;
 
-
+# region 数据类
+public class Arsenal
+{
+    public string name;
+    public GameObject rightGun;
+    public GameObject leftGun;
+    public RuntimeAnimatorController controller;
+}
 class Person
 {
     public List<Character> Persons = new List<Character>();
+}
+class Bag_Gun
+{
+    public List<HaveGun> haveGuns;
+}
+public class HaveGun
+{
+    public int ID;
+    public bool Have;
 }
 public class Character
 {
     public string Name;
     public bool[] HaveGun;
+    public int[] EquipGunId;
     public string Imformation;
 }
 
@@ -55,15 +72,23 @@ public class BoxInfo
     public int ID;
     public int MaxHp;
 }
+#endregion
+
 public class StaticData : Singleton<StaticData>
 {
+    #region 全局游戏数据
     Dictionary<int, MonsterInfo> m_Monsters = new Dictionary<int, MonsterInfo>();
     Dictionary<int, TowerInfo> m_Towers = new Dictionary<int, TowerInfo>();
     Dictionary<int, BulletInfo> m_Bullets = new Dictionary<int, BulletInfo>();
     Dictionary<int, GunInfo> m_Guns = new Dictionary<int, GunInfo>();
     Dictionary<int, BoxInfo> m_Box = new Dictionary<int, BoxInfo>();
-    //这个存在Json中
-    List<Character> m_people = new List<Character>();
+    //在资源文件夹里
+    public RuntimeAnimatorController[] Controllers;//角色控制器
+    //存在Json数据中
+    public List<Character> m_people = new List<Character>();
+    public List<HaveGun> m_haveGun = new List<HaveGun>();
+    #endregion
+
     protected override void Awake()
     {
         base.Awake();
@@ -72,9 +97,23 @@ public class StaticData : Singleton<StaticData>
         InitBullets();
         InitGuns();
         InitMess();
-        ReadPeopleData();
-    }
 
+        //是否第一次加载
+        if (PlayerPrefs.GetInt("IsFrist", -1) == -1)
+        {
+            PlayerPrefs.SetInt("IsFrist", 0);
+            InitPeople();
+            InitGuns();
+        }
+
+
+        ReadPeopleData();
+        ReadGunData();
+        //加载所有控制器
+        string path = "Controllers";
+        RuntimeAnimatorController[] Controllers = Resources.LoadAll<RuntimeAnimatorController>(path);
+    }
+    #region 初始化游戏数据
     void InitMonsters()
     {
         m_Monsters.Add(0, new MonsterInfo() { ID = 0, MaxHp = 90, MoveSpeed = 1f, Price = 2, damage = 15 });
@@ -111,6 +150,32 @@ public class StaticData : Singleton<StaticData>
         m_Guns.Add(2, new GunInfo() { ID = 2, PrefabName = "SciFiPistol_YM-3S", ShootRate = 3, ShootingDistance = 5f });
         m_Guns.Add(3, new GunInfo() { ID = 3, PrefabName = "SciFiRifle_YM-27", ShootRate = 10, ShootingDistance = 7f });
     }
+    void InitHaveGun()
+    {
+        Bag_Gun bag_Gun = new Bag_Gun();
+
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 0, Have = true });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 1, Have = true });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 2, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 3, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 4, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 5, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 6, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 7, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 8, Have = false });
+        bag_Gun.haveGuns.Add(new HaveGun() { ID = 9, Have = false });
+
+        string GunData = JsonMapper.ToJson(bag_Gun);
+
+        Saver.WriteJsonString(GunData, Saver.GunDataPath);
+    }
+
+    void ReadGunData()
+    {
+        string GunData = Saver.ReadJsonString(Saver.GunDataPath);
+        Bag_Gun bag_Gun = JsonMapper.ToObject<Bag_Gun>(GunData);
+        m_haveGun = bag_Gun.haveGuns;
+    }
     void InitPeople()
     {
         Person person = new Person();
@@ -118,48 +183,48 @@ public class StaticData : Singleton<StaticData>
         {
             Name = "零",
             HaveGun = new bool[] { true, true, false, false },
+            EquipGunId=new int[] {0,1,-1,-1},
             Imformation = "风之少女"
         });
-        person.Persons.Add( new Character()
+        person.Persons.Add(new Character()
         {
             Name = "龙峻",
-            HaveGun = new bool[] { true, true, false, false },
+            HaveGun = new bool[] { true, false, false, false },
+            EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "冷静的工程师"
         });
-        person.Persons.Add( new Character()
+        person.Persons.Add(new Character()
         {
             Name = "收割者",
-            HaveGun = new bool[] { true, true, false, false },
+            HaveGun = new bool[] { true, false, false, false },
+            EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "摘下面具，那么他是？"
         });
-        person.Persons.Add( new Character()
+        person.Persons.Add(new Character()
         {
             Name = "？",
-            HaveGun = new bool[] { true, true, false, false },
+            HaveGun = new bool[] { true, false, false, false },
+            EquipGunId = new int[] { 0, -1, -1, -1 },
             Imformation = "？？？"
         });
-        
-        //string Data= JsonUtility.ToJson(new Person() { Persons=m_people});//数据转化为字符串
-        string Data = JsonMapper.ToJson(person);
+
+        //string Data= JsonUtility.ToJson(new Person() { Persons=m_people});
+        string Data = JsonMapper.ToJson(person);//数据转化为字符串
         Regex reg = new Regex(@"(?i)\\[uU]([0-9a-f]{4})");
         var ss = reg.Replace(Data, delegate (Match m) { return ((char)Convert.ToInt32(m.Groups[1].Value, 16)).ToString(); });
 
-        Saver.WriteJsonString(ss);//写入
+        Saver.WriteJsonString(ss, Saver.CharacterDataPath);//写入
     }
     void ReadPeopleData()
     {
-        if (PlayerPrefs.GetInt("IsFrist",-1)==-1)
-        {
-            PlayerPrefs.SetInt("IsFrist", 0);
-            InitPeople();
-        }
-        string Data = Saver.ReadJsonString();//读取字符串
-
-
-        Person person =JsonMapper.ToObject<Person>(Data);//字符串转化为数据
+        string Data = Saver.ReadJsonString(Saver.CharacterDataPath);//读取字符串
+        Person person = JsonMapper.ToObject<Person>(Data);//字符串转化为数据
         m_people = person.Persons;
-        Debug.Log(person.Persons[0].Name);
     }
+    #endregion
+
+
+    #region 获取数据的函数接口
     public MonsterInfo GetMonsterInfo(int monsterID)
     {
         return m_Monsters[monsterID];
@@ -186,4 +251,6 @@ public class StaticData : Singleton<StaticData>
     {
         return m_people[CharacterID];
     }
+    #endregion
+
 }

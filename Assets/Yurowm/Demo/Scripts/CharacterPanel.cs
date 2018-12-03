@@ -58,7 +58,6 @@ public class CharacterPanel : View
 
     void Awake()
     {
-        
         Lock = GameObject.Find("LockButton");
         Select.onClick.AddListener(() =>
         {
@@ -83,8 +82,10 @@ public class CharacterPanel : View
         actions = character[index].GetComponent<Actions>();
         controller = character[index].GetComponent<PlayerController>();
 
-        foreach (PlayerController.Arsenal a in controller.arsenal)
-            CreateWeaponButton(a.name, index);
+        for (int i = 0; i < controller.arsenal.Count; i++)
+        {
+            CreateWeaponButton(controller.arsenal[i].name, index,i);
+        }
     }
 
     private void SetButton()
@@ -108,18 +109,27 @@ public class CharacterPanel : View
         camerasPanel.GetChild(0).GetComponent<Button>().onClick.Invoke();
     }
 
-    void CreateWeaponButton(string name, int id)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name">武器的名字</param>
+    /// <param name="id">所属哪个buttons集合</param>
+    void CreateWeaponButton(string name, int Listid,int GunId)
     {
         Button button = CreateButton(name, weaponsPanel);
-        button.onClick.AddListener(() => controller.SetArsenal(name));
-        buttons[id].Add(button);
+        button.onClick.AddListener(() => controller.SetArsenal(GunId));
+        buttons[Listid].Add(button);
     }
 
     void CreateActionButton(string name)
     {
         CreateActionButton(name, name);
     }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="name">动作名字</param>
+    /// <param name="message">对应的Action的函数消息</param>
     void CreateActionButton(string name, string message)
     {
         Button button = CreateButton(name, actionsPanel);

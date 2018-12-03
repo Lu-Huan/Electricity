@@ -10,9 +10,10 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 2300000}
   - component: {fileID: 3300000}
+  - component: {fileID: 114444509076109386}
   m_Layer: 0
   m_Name: SilencedPistol
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -83,3 +84,16 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabAsset: 1
+--- !u!114 &114444509076109386
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad8eab930e7c9934180ec8393551016a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 
+  GunType: 1

@@ -24,7 +24,7 @@ public class MainCharacter : View
     private bool[] HaveGun;
     public GameObject SelectedEffect;//选中怪物后的效果显示
     public int sceneindex;
-    private Role m_target;
+    private Role m_target=null;
     public Role Target
     {
         get
@@ -51,10 +51,10 @@ public class MainCharacter : View
     {
         set
         {
-            index = value % PlayerController.arsenal.Length;
+            index = value % PlayerController.arsenal.Count;
             if (index < 0)
             {
-                index = PlayerController.arsenal.Length - 1;
+                index = PlayerController.arsenal.Count - 1;
             }
             GunInfo gunInfo = Game.Instance.StaticData.GetGunInfo(index);
             GunName = gunInfo.PrefabName;
@@ -321,11 +321,18 @@ public class MainCharacter : View
             Actions.Aiming();
         }*/
     }
+
+    /// <summary>
+    /// 虚函数给子类实现子弹的发射方式
+    /// </summary>
     protected virtual void InstanceBullte() { }
 
-    private void ChangeGun()
+    /// <summary>
+    /// 虚函数 子类可在换枪后加行为
+    /// </summary>
+    protected virtual void ChangeGun()
     {
-        PlayerController.SetArsenal(PlayerController.arsenal[Gunindex].name);
+        PlayerController.SetArsenal(Gunindex);
         ChangGunBackArgs args = new ChangGunBackArgs
         {
             GunID = index,
